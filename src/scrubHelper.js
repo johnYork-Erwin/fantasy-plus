@@ -17,7 +17,8 @@ const playerStats = {
   passYards: 0,
   passTd: 0,
   int: 0,
-  plays: []
+  plays: [],
+  week: '',
 }
 
 const teamStats = {
@@ -104,6 +105,8 @@ const scrubForPlayers = function(obj) {
   const rushing = Object.assign(obj.away.stats.rushing, obj.home.stats.rushing)
   const passing = Object.assign(obj.away.stats.passing, obj.home.stats.passing)
   const receiving = Object.assign(obj.away.stats.receiving, obj.home.stats.receiving)
+  const homeStats = Object.assign(obj.home.stats.receiving, obj.home.stats.passing, obj.home.stats.rushing);
+  const awayStats = Object.assign(obj.away.stats.receiving, obj.away.stats.passing, obj.away.stats.rushing);
   let fumbles = {};
   //merges fumbles, there may be no stats for fumbles
   if (obj.away.stats.fumbles && obj.home.stats.fumbles) {
@@ -114,8 +117,8 @@ const scrubForPlayers = function(obj) {
     fumbles = obj.home.stats.fumbles;
   }
   //loop through all the stats in the game for running plays
-  for (let run in rushing) {
-    run = rushing[run]
+  for (let key in rushing) {
+    run = rushing[key]
     let current = run.name;
     let object = deepcopy(playerStats);
     object.rushTargets = run.attempts;
@@ -125,8 +128,8 @@ const scrubForPlayers = function(obj) {
     players[current] = object;
   }
   //loop through all the stats in the game for receiving
-  for (let reception in receiving) {
-    reception = receiving[reception];
+  for (let key in receiving) {
+    reception = receiving[key];
     let object;
     if (players.hasOwnProperty(reception.name)) {
       object = players[reception.name];
@@ -136,12 +139,12 @@ const scrubForPlayers = function(obj) {
     object.recYards = reception.yards;
     object.recTd = reception.touchdowns;
     object.rec = reception.receptions;
-    object.twoYards = reception.two_point_makes;
+    object.twoPoints = reception.two_point_makes;
     players[reception.name] = object;
   }
   //loop through all the stats in the game for passing
-  for (let pass in passing) {
-    pass = passing[pass]
+  for (let key in passing) {
+    pass = passing[key]
     let object;
     if (players.hasOwnProperty(pass.name)) {
       object = players[pass.name]
@@ -161,6 +164,14 @@ const scrubForPlayers = function(obj) {
     if (fumbles[fumble].fumbles_lost && !players.hasOwnProperty(fumbles[fumble].name)) {
       players[fumbles[fumble].name].fumbles ++;
     }
+  }
+  for (key in awayStats) {
+    players[awayStats[key].name].team = obj.away.team;
+    players[awayStats[key].name].week = obj.week;
+  }
+  for (key in homeStats) {
+    players[homeStats[key].name].team = obj.home.team;
+    players[homeStats[key].name].week = obj.week;
   }
   return players;
 }

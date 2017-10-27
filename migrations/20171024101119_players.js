@@ -7,8 +7,15 @@ exports.up = function(knex, Promise) {
     table.string('player_name').notNullable();
     table.integer('jersey_number').notNullable();
     table.string('position').notNullable();
+    table.string('headshot');
     table.json('stats').defaultTo(JSON.stringify({}));
-    table.integer('total_points').notNullable();
+    table.decimal('total_points').notNullable().defaultTo(0);
+    table.string('college');
+    table.integer('height');
+    table.integer('weight');
+    table.string('birthdate');
+    table.string('status');
+    table.string('team_code');
   })
 };
 
