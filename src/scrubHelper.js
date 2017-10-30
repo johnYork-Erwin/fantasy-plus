@@ -1,7 +1,6 @@
 const deepcopy = require('deepcopy');
 
 const playerStats = {
-  team: '',
   rushAttempts: 0,
   rushYards: 0,
   rushTd: 0,
@@ -101,26 +100,25 @@ const scrubForTeams = function(obj) {
 
 const scrubForPlayers = function(obj) {
   let players = {};
-  //merges things so we can have an easier time looping through them
-  const rushing = Object.assign(obj.away.stats.rushing, obj.home.stats.rushing)
-  const passing = Object.assign(obj.away.stats.passing, obj.home.stats.passing)
-  const receiving = Object.assign(obj.away.stats.receiving, obj.home.stats.receiving)
-  const homeStats = Object.assign(obj.home.stats.receiving, obj.home.stats.passing, obj.home.stats.rushing);
-  const awayStats = Object.assign(obj.away.stats.receiving, obj.away.stats.passing, obj.away.stats.rushing);
-  let fumbles = {};
-  //merges fumbles, there may be no stats for fumbles
-  if (obj.away.stats.fumbles && obj.home.stats.fumbles) {
-    fumbles = Object.assign(obj.away.stats.fumbles, obj.home.stats.fumbles)
-  } else if (obj.away.stats.fumbles) {
-    fumbles = obj.away.stats.fumbles;
-  } else if (obj.home.stats.fumbles) {
-    fumbles = obj.home.stats.fumbles;
-  }
   //loop through all the stats in the game for running plays
-  for (let key in rushing) {
-    run = rushing[key]
+  for (let key in obj.away.stats.rushing) {
+    run = obj.away.stats.rushing[key];
     let current = run.name;
     let object = deepcopy(playerStats);
+    object.week = obj.week;
+    object.teamCode = obj.away.team;
+    object.rushTargets = run.attempts;
+    object.rushYards = run.yards;
+    object.rushTd = run.touchdowns;
+    object.twoPoints = run.two_point_makes;
+    players[current] = object;
+  }
+  for (let key in obj.home.stats.rushing) {
+    run = obj.home.stats.rushing[key]
+    let current = run.name;
+    let object = deepcopy(playerStats);
+    object.week = obj.week;
+    object.teamCode = obj.home.team;
     object.rushTargets = run.attempts;
     object.rushYards = run.yards;
     object.rushTd = run.touchdowns;
@@ -128,28 +126,52 @@ const scrubForPlayers = function(obj) {
     players[current] = object;
   }
   //loop through all the stats in the game for receiving
-  for (let key in receiving) {
-    reception = receiving[key];
+  for (let key in obj.home.stats.receiving) {
+    reception = obj.home.stats.receiving[key];
     let object;
     if (players.hasOwnProperty(reception.name)) {
       object = players[reception.name];
     } else {
       object = deepcopy(playerStats);
+      object.teamCode = obj.home.team;
+      object.week = obj.week;
     }
     object.recYards = reception.yards;
     object.recTd = reception.touchdowns;
-    object.rec = reception.receptions;
+    if (reception.receptions) {
+      object.rec = reception.receptions;
+    } else object.rec = 0;
+    object.twoPoints = reception.two_point_makes;
+    players[reception.name] = object;
+  }
+  for (let key in obj.away.stats.receiving) {
+    reception = obj.away.stats.receiving[key];
+    let object;
+    if (players.hasOwnProperty(reception.name)) {
+      object = players[reception.name];
+    } else {
+      object = deepcopy(playerStats);
+      object.teamCode = obj.away.team;
+      object.week = obj.week;
+    }
+    object.recYards = reception.yards;
+    object.recTd = reception.touchdowns;
+    if (reception.receptions) {
+      object.rec = reception.receptions;
+    } else object.rec = 0;
     object.twoPoints = reception.two_point_makes;
     players[reception.name] = object;
   }
   //loop through all the stats in the game for passing
-  for (let key in passing) {
-    pass = passing[key]
+  for (let key in obj.away.stats.passing) {
+    pass = obj.away.stats.passing[key]
     let object;
     if (players.hasOwnProperty(pass.name)) {
       object = players[pass.name]
     } else {
       object = deepcopy(playerStats);
+      object.teamCode = obj.away.team;
+      object.week = obj.week;
     }
     object.passAttempts = pass.attempts;
     object.passCompletions = pass.completions;
@@ -159,19 +181,36 @@ const scrubForPlayers = function(obj) {
     object.passYards = pass.yards;
     players[pass.name] = object;
   }
-  //track fumbles
-  for (let fumble in fumbles) {
-    if (fumbles[fumble].fumbles_lost && !players.hasOwnProperty(fumbles[fumble].name)) {
-      players[fumbles[fumble].name].fumbles ++;
+  for (let key in obj.home.stats.passing) {
+    pass = obj.home.stats.passing[key]
+    let object;
+    if (players.hasOwnProperty(pass.name)) {
+      object = players[pass.name]
+    } else {
+      object = deepcopy(playerStats);
+      object.teamCode = obj.home.team;
+      object.week = obj.week;
+    }
+    object.passAttempts = pass.attempts;
+    object.passCompletions = pass.completions;
+    object.int = pass.interceptions;
+    object.passTd = pass.touchdowns;
+    object.twoPoints = pass.two_point_makes;
+    object.passYards = pass.yards;
+    players[pass.name] = object;
+  }
+  // there may be no stats for fumbles
+  for (let fumble in obj.home.stats.fumbles) {
+    fumble = obj.home.stats.fumbles[fumble];
+    if (fumble.fumbles_lost === 1) {
+      players[fumble.name].fumbles++;
     }
   }
-  for (key in awayStats) {
-    players[awayStats[key].name].team = obj.away.team;
-    players[awayStats[key].name].week = obj.week;
-  }
-  for (key in homeStats) {
-    players[homeStats[key].name].team = obj.home.team;
-    players[homeStats[key].name].week = obj.week;
+  for (let fumble in obj.away.stats.fumbles) {
+    fumble = obj.away.stats.fumbles[fumble];
+    if (fumble.fumbles_lost === 1) {
+      players[fumble.name].fumbles++;
+    }
   }
   return players;
 }

@@ -6,9 +6,8 @@ import axios from 'axios';
 class App extends Component {
 
   componentWillMount() {
-    console.log('mountin')
     axios.get('/external/update').then(result => {
-      console.log(result)
+      // console.log(result)
     }).catch(err => {
       console.log('err')
     })
