@@ -12,7 +12,6 @@ class SideBar extends React.Component {
   }
 
   getPlayers() {
-    // console.log(this.props.userInfo)
     if (this.props.loggedIn) {
       axios.get(`/userPlayers/`)
       .then(result => {
@@ -45,6 +44,7 @@ class SideBar extends React.Component {
       <div id='sideBar'>
         <h3>Your Players</h3>
         {this.state.userPlayers.map(function(player) {
+          console.log(player)
           return <div>{player.player_name_full}</div>
         })}
       </div>
