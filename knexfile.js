@@ -12,8 +12,8 @@ module.exports = {
   //   connection: 'postgres://localhost/candle_dev'
   // },
   //
-  // production: {
-  //   client: 'pg',
-  //   connection: process.env.DATABASE_URL,
-  // }
+  production: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
+  }
 };
