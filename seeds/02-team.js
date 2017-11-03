@@ -79,7 +79,7 @@ const teams = [{
   stats : {},
 },
 {
-  team_code : 'LA',
+  team_code : 'LAR',
   team_name : 'Los Angeles Rams',
   stats : {},
 },
@@ -129,8 +129,8 @@ const teams = [{
   stats : {},
 },
 {
-  team_code : 'SD',
-  team_name : 'San Diego Chargers',
+  team_code : 'LAC',
+  team_name : 'Los Angeles Chargers',
   stats : {},
 },
 {

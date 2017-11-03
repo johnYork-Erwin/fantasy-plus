@@ -103,11 +103,12 @@ const scrubForPlayers = function(obj) {
   //loop through all the stats in the game for running plays
   for (let key in obj.away.stats.rushing) {
     run = obj.away.stats.rushing[key];
+    // console.log(run.attempts)
     let current = run.name;
     let object = deepcopy(playerStats);
     object.week = obj.week;
     object.teamCode = obj.away.team;
-    object.rushTargets = run.attempts;
+    object.rushAttempts = run.attempts;
     object.rushYards = run.yards;
     object.rushTd = run.touchdowns;
     object.twoPoints = run.two_point_makes;
@@ -115,11 +116,12 @@ const scrubForPlayers = function(obj) {
   }
   for (let key in obj.home.stats.rushing) {
     run = obj.home.stats.rushing[key]
+    // console.log(run.attempts)
     let current = run.name;
     let object = deepcopy(playerStats);
     object.week = obj.week;
     object.teamCode = obj.home.team;
-    object.rushTargets = run.attempts;
+    object.rushAttempts = run.attempts;
     object.rushYards = run.yards;
     object.rushTd = run.touchdowns;
     object.twoPoints = run.two_point_makes;
@@ -203,13 +205,17 @@ const scrubForPlayers = function(obj) {
   for (let fumble in obj.home.stats.fumbles) {
     fumble = obj.home.stats.fumbles[fumble];
     if (fumble.fumbles_lost === 1) {
-      players[fumble.name].fumbles++;
+      if (players.hasOwnProperty(fumble.name)) {
+        players[fumble.name].fumbles++;
+      }
     }
   }
   for (let fumble in obj.away.stats.fumbles) {
     fumble = obj.away.stats.fumbles[fumble];
     if (fumble.fumbles_lost === 1) {
-      players[fumble.name].fumbles++;
+      if (players.hasOwnProperty(fumble.name)) {
+        players[fumble.name].fumbles++;
+      }
     }
   }
   return players;

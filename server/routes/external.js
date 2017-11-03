@@ -25,64 +25,64 @@ const playerPlate = {
 }
 
 router.get('/external/update', (req, res, next) => {
-  let players = {};
+  let players = [];
   getCurrent().then(result => {
     //returns an array of game ids for the week
-    return getSchedule(result+1);
+    return getSchedule(2);
   })
   .then(result => {
     //gets game data for the given game ids
-    return getGame(result[0]);
+    let array = [];
+    for (let i = 0; i < result.length; i++) {
+      array.push(getGame(result[i]));
+    }
+    return Promise.all(array);
   })
-  .then(game => {
+  .then(games => {
+    let array = [];
+    for (let i = 0; i < games.length; i++) {
+      array.push(scrubHelper(games[i]))
+    }
     //scrubs the game data
-    return scrubHelper(game);
+    return Promise.all(array);
   })
   .then(gameStats => {
-    players = gameStats.players;
-    let teams = [];
-    for (let team in gameStats.teams) {
-      teams.push(buildTeamPatch(gameStats.teams[team]));
+    let array = [];
+    for (let i = 0; i < gameStats.length; i++) {
+      players.push(gameStats[i].players);
+      let teams = [];
+      for (let team in gameStats[i].teams) {
+        teams.push(buildTeamPatch(gameStats[i].teams[team]));
+      }
+      array.push(Promise.all(teams));
     }
-    //updates the teams DB based on this game
-    return Promise.all(teams);
+    return Promise.all(array);
   }).then(builtTeams => {
-    let newArray = [];
-    for (let team in builtTeams) {
-      newArray.push(patchTeam(builtTeams[team]))
+    let array = [];
+    for (let i = 0; i < builtTeams.length; i++) {
+      let newArray = [];
+      for (let team in builtTeams[i]) {
+        newArray.push(patchTeam(builtTeams[i][team]))
+      }
+      array.push(Promise.all(newArray));
     }
-    return Promise.all(newArray);
+    return Promise.all(array);
+
+    //switching to work on players
   }).then(results => {
-    let playerArray = [];
-    for (let player in players) {
-      //merges player data from 2nd api with player data from said game
-      playerArray.push(getPlayerInfo(player, players[player].teamCode, players[player]));
+    let playersArray = [];
+    for (let i = 0; i < players.length; i++) {
+      for (let player in players[i]) {
+        players[i][player].player_name = player;
+        playersArray.push(addTeamId(players[i][player]))
+      }
     }
-    //returns an array of players w/ their data from the game and the api
-    return Promise.all(playerArray);
-  })
-  .then(playerArray => {
-    const newArray = [];
-    for (let i = 0; i < playerArray.length; i++) {
-      //call to my DB to add teamID to each players' data
-      newArray.push(addTeamId(playerArray[i]))
-    }
-    //returns an array of completed player data
-    return Promise.all(newArray);
-  })
-  .then(playerArray => {
-    const newArray = [];
-    for (let i = 0; i < playerArray.length; i++) {
-      //updates player DB for each player
-      newArray.push(updatePlayer(playerArray[i]))
-    }
-    return Promise.all(newArray);
-  })
-  .then(result => {
-    //logs this after the DB has been updated for all these players
-    console.log('updated week 1')
-  })
-  .catch(err => console.log(err, 'error fetching "current" data'))
+    return Promise.all(playersArray)
+  }).then(playersArray => {
+    return finishPlayers(playersArray)
+  }).then(result => {
+    console.log('successfully updated the week');
+  }).catch(err => console.log('error fetching "current" data'))
 })
 
 //Gets what week we're up to in RL
@@ -100,6 +100,7 @@ function getCurrent() {
 
 //Gets the schedule for that week
 function getSchedule(weekNumber) {
+  console.log(`my secret api key is ${key}`)
   return new Promise(function (resolve, reject) {
     axios.post(`https://profootballapi.com/schedule?api_key=${key}&year=2017&week=${weekNumber}&season_type=REG`).then(result =>{
       let idArray = result.data.map(el => {
@@ -125,42 +126,24 @@ function getGame(gameId) {
   })
 }
 
-//gets info about the player
-function getPlayerInfo(player, team, stats) {
-  return new Promise(function (resolve, reject) {
-    axios.get(`http://api.suredbits.com/nfl/v0/players/${player.slice(2)}`).then(result => {
-      result = result.data
-      let retVal = deepcopy(playerPlate);
-      for (let i = 0; i < result.length; i++) {
-        if (player.slice(0, -player.length+1) === result[i].firstName.slice(0, -result[i].firstName.length+1)
-          && result[i].lastName === player.slice(2)) {
-          if (result[i].team === team || (result[i].team === 'JAC' && team === 'JAX')) {
-            retVal.team_code = team;
-            retVal.player_name = result[i].fullName;
-            retVal.jersey_number = result[i].uniformNumber;
-            retVal.height = result[i].height;
-            retVal.weight = result[i].weight;
-            retVal.birthdate = result[i].birthDate;
-            retVal.college = result[i].college;
-            retVal.status = result[i].status;
-            retVal.position = result[i].position;
-            retVal.stats = stats
-          }
-        }
-      }
-      resolve(retVal);
-    }).catch(err => {
-      reject(err)
-    })
-  })
+async function finishPlayers(playersArray) {
+  let finishedArray = [];
+  while(playersArray.length !== 0) {
+    let player = playersArray.splice(0,1);
+    let temp = await updatePlayer(player)
+    finishedArray = finishedArray.concat([temp])
+    console.log('finsihed 1 tick', finishedArray.length);
+  }
+  return finishedArray;
 }
 
 //gets the teamId from the database that should be added to the player
 function addTeamId(player) {
+  if (player.teamCode === 'LA') player.teamCode = 'LAR'
   return new Promise(function (resolve, reject) {
-    knex('teams').where('team_code', '=', player.team_code).select('id')
+    knex('teams').where('team_code', '=', player.teamCode).select('id')
       .then(result => {
-        if (result.length > 0) {
+        if (result.length === 1) {
           player.team_id = result[0].id;
         }
         resolve(player)
@@ -174,12 +157,12 @@ function addTeamId(player) {
 //Entering player data into the database
 function updatePlayer(player) {
   return new Promise(function (resolve, reject) {
-    knex('players').where('player_name', '=', player.player_name)
-      .andWhere('team_code', '=', player.team_code).then(result => {
+    knex('players').where('player_name', '=', player[0].player_name)
+      .andWhere('team_id', '=', player[0].team_id).then(result => {
       if (result.length === 0) {
-        resolve(postPlayer(player));
+        resolve(getPlayerInfo(player[0].player_name, player[0].teamCode, player[0]));
       } else {
-        resolve(patchPlayer(player, result[0]));
+        resolve(patchPlayer(player[0], result[0]));
       }
     })
     .catch(err => {
@@ -188,69 +171,114 @@ function updatePlayer(player) {
   })
 }
 
-function postPlayer(player) {
-  if (player.player_name) {
-    let seasonStats = {
-      rushAttempts: player.stats.rushAttempts,
-      rushYards: player.stats.rushYards,
-      rushTd: player.stats.rushTd,
-      rec: player.stats.rec,
-      recTargets: player.stats.recTargets,
-      recYards: player.stats.recYards,
-      recTd: player.stats.recTd,
-      returnTd: player.stats.returnTd,
-      twoPoints: player.stats.twoPoints,
-      fumbles: player.stats.fumbles,
-      passAttempts: player.stats.passAttempts,
-      passCompletions: player.stats.passCompletions,
-      passYards: player.stats.passYards,
-      passTd: player.stats.passTd,
-      int: player.stats.int,
-      totalTd: (player.stats.recTd + player.stats.rushTd + player.stats.returnTd + player.stats.passTd),
-    }
-    let game = deepcopy(seasonStats);
-    game.plays = player.stats.plays;
-    let week = player.stats.week
-    delete player.stats;
-    player.total_points = (seasonStats.rushYards + seasonStats.recYards)/10
-      + (seasonStats.passYards)/25 + (seasonStats.recTd + seasonStats.rushTd + seasonStats.returnTd)*6 + (seasonStats.passTd * 4)
-      - (seasonStats.int + seasonStats.fumbles)*2 + (seasonStats.twoPoints)*2;
-    seasonStats.totalPoints = player.total_points;
-    game.totalPoints = player.total_points;
-    player.stats = {
-      seasonStats: seasonStats,
-      games: {},
-    }
-    player.stats.games[week] = game;
-    delete player.stats.week;
-    return new Promise(function (resolve, reject) {
-      knex('players').insert(player).then(result => {
-        resolve('success')//Do I need to do anything here?
-      })
-      .catch(err => {
-        reject(err);
-      })
+//gets info about the player
+function getPlayerInfo(player, team, stats) {
+  return new Promise(function (resolve, reject) {
+    axios.get(`http://api.suredbits.com/nfl/v0/players/${player.slice(2)}`).then(result => {
+      result = result.data
+      let retVal = deepcopy(playerPlate);
+      let found = false;
+      for (let i = 0; i < result.length; i++) {
+        if (player.slice(0, -player.length+1) === result[i].firstName.slice(0, -result[i].firstName.length+1)
+        && result[i].lastName === player.slice(2)) {
+          if (result[i].team === team || (result[i].team === 'JAC' && team === 'JAX')) {
+            found = true;
+            if (result[i].team === 'JAC') retVal.team_code = 'JAX';
+            else retVal.team_code = team;
+            retVal.player_name = player;
+            retVal.player_name_full = result[i].fullName;
+            retVal.jersey_number = result[i].uniformNumber;
+            retVal.height = result[i].height;
+            retVal.weight = result[i].weight;
+            retVal.birthdate = result[i].birthDate;
+            retVal.college = result[i].college;
+            retVal.status = result[i].status;
+            retVal.position = result[i].position;
+            retVal.stats = stats;
+            retVal.team_id = stats.team_id;
+            i = result.length;
+          }
+        }
+      }
+      if (found) {
+        resolve(postPlayer(retVal));
+      } else {
+        resolve(postPlayer({
+          player_name: player,
+          stats: stats,
+          team_id: stats.team_id,
+        }))
+      }
+    }).catch(err => {
+      console.log('player not found')
     })
-  } else {
-    reject('player not found')
+  })
+}
+
+function postPlayer(player) {
+  console.log('posting')
+  let seasonStats = {
+    rushAttempts: player.stats.rushAttempts,
+    rushYards: player.stats.rushYards,
+    rushTd: player.stats.rushTd,
+    rec: player.stats.rec,
+    recTargets: player.stats.recTargets,
+    recYards: player.stats.recYards,
+    recTd: player.stats.recTd,
+    returnTd: player.stats.returnTd,
+    twoPoints: player.stats.twoPoints,
+    fumbles: player.stats.fumbles,
+    passAttempts: player.stats.passAttempts,
+    passCompletions: player.stats.passCompletions,
+    passYards: player.stats.passYards,
+    passTd: player.stats.passTd,
+    int: player.stats.int,
+    totalTd: (player.stats.recTd + player.stats.rushTd + player.stats.returnTd + player.stats.passTd),
   }
+  let game = deepcopy(seasonStats);
+  game.plays = player.stats.plays;
+  let week = player.stats.week
+  delete player.stats;
+  player.total_points = (seasonStats.rushYards + seasonStats.recYards)/10
+  + (seasonStats.passYards)/25 + (seasonStats.recTd + seasonStats.rushTd + seasonStats.returnTd)*6 + (seasonStats.passTd * 4)
+  - (seasonStats.int + seasonStats.fumbles)*2 + (seasonStats.twoPoints)*2;
+  seasonStats.totalPoints = player.total_points;
+  game.totalPoints = player.total_points;
+  player.stats = {
+    seasonStats: seasonStats,
+    games: {},
+  }
+  player.stats.games[week] = game;
+  delete player.stats.week;
+  return new Promise(function (resolve, reject) {
+    knex('players').insert(player).then(result => {
+      resolve('success!')
+    }).catch(err => {
+      reject(err)
+    })
+  })
 }
 
 function patchPlayer(player, current) {
+  console.log(player, 'Is the player')
+  console.log(current, 'Is stats thusfar');
   return new Promise(function (resolve, reject) {
-    if (!current.stats.games.hasOwnProperty(player.stats.week)) {
-      player.stats.totalPoints = (player.stats.rushYards + player.stats.recYards)/10
-        + (player.stats.passYards)/25 + (player.stats.recTd + player.stats.rushTd + player.stats.returnTd)*6 + (player.stats.passTd * 4)
-        - (player.stats.int + player.stats.fumbles)*2 + (player.stats.twoPoints)*2;
-      player.stats.totalTd = (player.stats.rushTd + player.stats.passTd + player.stats.returnTd + player.stats.recTd)
+    if (!current.stats.games.hasOwnProperty(player.week)) {
+      player.totalPoints = (player.rushYards + player.recYards)/10
+        + (player.passYards)/25 + (player.recTd + player.rushTd + player.returnTd)*6 + (player.passTd * 4)
+        - (player.int + player.fumbles)*2 + (player.twoPoints)*2;
+      player.totalTd = (player.rushTd + player.passTd + player.returnTd + player.recTd)
       for (let key in current.stats.seasonStats) {
-        current.stats.seasonStats[key] += player.stats[key];
+        current.stats.seasonStats[key] += player[key];
       }
-      delete player.stats.teamCode;
-      const week = player.stats.week;
-      delete player.stats.week;
-      current.stats.games[week] = player.stats;
-      current.total_points = Number(player.stats.totalPoints) + Number(current.total_points);
+      delete player.teamCode;
+      const week = player.week;
+      delete player.week;
+      delete player.player_name;
+      delete player.team_id;
+      delete player.totalTd;
+      current.stats.games[week] = player;
+      current.total_points = Number(player.totalPoints) + Number(current.total_points);
       knex('players').where('id', '=', current.id)
         .update({
           total_points: current.total_points,
@@ -266,8 +294,14 @@ function patchPlayer(player, current) {
 
 //builds patch for team to the database
 function buildTeamPatch(team) {
+  let teamFinder;
+  if (team.teamCode === 'LA') {
+    teamFinder = 'LAR';
+  } else {
+    teamFinder = team.teamCode
+  }
   return new Promise(function (resolve, reject) {
-    knex('teams').where('team_code', '=', team.teamCode).then(result => {
+    knex('teams').where('team_code', '=', teamFinder).then(result => {
       if (Object.keys(result[0].stats).length === 0) {
         result[0].stats.record = {
           wins: 0,
@@ -334,6 +368,5 @@ function patchTeam(team) {
     }
   })
 }
-
 
 module.exports = router;

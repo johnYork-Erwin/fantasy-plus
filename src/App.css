@@ -1,3 +1,92 @@
+.block {
+  display: inline-block;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  height: 900px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+#leaderBoard th, td {
+  width: 200px;
+}
+
+.tableContainer {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tableContainer th, td {
+  text-align: center;
+  width: 100px;
+  height: 30px;
+}
+
+.main {
+  width: 80%;
+  height: 100%;
+}
+
+.main * {
+  margin-top: 10px;
+  margin-left: 15px;
+}
+
+#sideBar {
+  width: 20%;
+  height: 100%;
+  background-color: blue;
+}
+
+#sideBar h3 {
+  text-align: center;
+  text-decoration: underline;
+}
+
+#sideBar div {
+  text-align: center;
+  margin-top: 5px;
+}
+
+#sideBar * {
+  margin-left: 5px;
+}
+
+.banner {
+  margin-top: -21px;
+  background-color: lightblue;
+  border-color: blue;
+  border-width: 5px;
+}
+
+.banner * {
+  display: inline-block;
+}
+
+.banner * {
+  margin-left: 5px;
+  vertical-align: center;
+}
+
+.background {
+  display: inline-block;
+  background-color: grey;
+  height: 100%;
+  width: 100%;
+}
+
+
+/*Beign supplied by the REact build*/
+
+
 .App {
   text-align: center;
 }

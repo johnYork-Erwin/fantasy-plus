@@ -1,29 +1,92 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Splash from './components/Splash.js';
+import SideBar from './components/SideBar.js';
+import Player from './components/Player.js';
+import Team from './components/Team.js';
+import PlayerGame from './components/PlayerGame.js';
+import Banner from './components/Banner.js';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: true,
+      userInfo: {},
+    }
+    this.logIn = this.logIn.bind(this);
+    this.update = this.update.bind(this);
+    this.logOut = this.logOut.bind(this);
+  }
 
-  componentWillMount() {
+
+  signUp(information) {
+    console.log(`reached signup with ${information}`);
+    axios.post('/users', information)
+      .then(response => {
+        console.log('posted to users successfully now trying to get a token')
+        return axios.post('/token', information)
+      }).then(response => {
+        this.setState({
+          loggedIn: true,
+        })
+      })
+      .catch(err => console.log('sign up failed'))
+  }
+
+  logIn(information) {
+    console.log(`reached login with ${information}`)
+    axios.post('/token', information)
+      .then(response => {
+        let object = {
+          username: response.data.username,
+        }
+        this.setState({
+          loggedIn: true,
+          userInfo: object,
+        })
+        console.log(this.state)
+      }).catch(err => console.log('could not get you a token'))
+  }
+
+  logOut() {
+    axios.delete('/token').then(result => {
+      this.setState({
+        loggedIn: false,
+        userInfo: {},
+      })
+    }).catch(err => console.log('could not log out'));
+  }
+
+  update() {
     axios.get('/external/update').then(result => {
-      // console.log(result)
+      console.log(result)
     }).catch(err => {
-      console.log('err')
+      console.log('error!')
     })
   }
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <MuiThemeProvider>
+        <Router>
+          <div className='background'>
+            <Banner loggedIn={this.state.loggedIn} update={this.update} logOut={this.logOut} signUp={this.signUp} logIn={this.logIn} userInfo={this.state.userInfo}/>
+            <div className='container'>
+              {this.state.loggedIn &&
+                <SideBar userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
+              }
+              <Route path='/' render={() => <Splash loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/:player' render={() => <Player loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/:player/:game' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+            </div>
+          </div>
+        </Router>
+      </MuiThemeProvider>
     );
   }
 }

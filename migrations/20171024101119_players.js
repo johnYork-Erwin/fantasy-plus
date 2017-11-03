@@ -5,11 +5,12 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.integer('team_id').references('teams.id').notNullable().onDelete('CASCADE');
     table.string('player_name').notNullable();
-    table.integer('jersey_number').notNullable();
-    table.string('position').notNullable();
+    table.string('player_name_full');
+    table.integer('jersey_number');
+    table.string('position');
     table.string('headshot');
-    table.json('stats').defaultTo(JSON.stringify({}));
-    table.decimal('total_points').notNullable().defaultTo(0);
+    table.json('stats');
+    table.decimal('total_points').notNullable();
     table.string('college');
     table.integer('height');
     table.integer('weight');

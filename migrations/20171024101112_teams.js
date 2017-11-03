@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.increments();
     table.string('team_name').notNullable();
     table.string('team_code').notNullable();
-    table.json('stats').defaultTo(JSON.stringify({}));
+    table.json('stats');
   })
 };
 
