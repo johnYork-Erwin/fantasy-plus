@@ -30,11 +30,11 @@ app.use(teams)
 app.use(userPlayers)
 app.use(users)
 app.use(token)
-// app.use(express.static(path.join(__dirname, "..", "build")));
-//
-// app.get("/*", function(req, res) {
-//   res.sendFile(path.join(__dirname, "../build/index.html"));
-// });
+app.use(express.static(path.join(__dirname, "..", "build")));
+
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname, "../build/index.html"));
+});
 
 app.use((req, res) => {
   res.sendStatus(404);
