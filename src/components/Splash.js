@@ -54,7 +54,6 @@ class Splash extends React.Component {
       this.setState({
         leaders: result,
       })
-      console.log(this.state)
     })
     .catch(err => {
       console.log(err)

@@ -62,6 +62,7 @@ class App extends Component {
   }
 
   update() {
+    console.log('updating')
     axios.get('/external/update').then(result => {
       console.log(result)
     }).catch(err => {
@@ -79,10 +80,10 @@ class App extends Component {
               {this.state.loggedIn &&
                 <SideBar userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
               }
-              <Route path='/' render={() => <Splash loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route path='/:player' render={() => <Player loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route path='/:player/:game' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route exact path='/' render={() => <Splash loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route exact path='/player/:id' render={() => <Player/>}/>
+              <Route exact path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route exact path='/specificGame/:game/:player' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
             </div>
           </div>
         </Router>

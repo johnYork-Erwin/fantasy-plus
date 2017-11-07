@@ -28,7 +28,7 @@ router.get('/external/update', (req, res, next) => {
   let players = [];
   getCurrent().then(result => {
     //returns an array of game ids for the week
-    return getSchedule(2);
+    return getSchedule(5);
   })
   .then(result => {
     //gets game data for the given game ids
@@ -41,7 +41,9 @@ router.get('/external/update', (req, res, next) => {
   .then(games => {
     let array = [];
     for (let i = 0; i < games.length; i++) {
-      array.push(scrubHelper(games[i]))
+      if (games[i] !== undefined) {
+        array.push(scrubHelper(games[i]))
+      }
     }
     //scrubs the game data
     return Promise.all(array);
@@ -82,7 +84,7 @@ router.get('/external/update', (req, res, next) => {
     return finishPlayers(playersArray)
   }).then(result => {
     console.log('successfully updated the week');
-  }).catch(err => console.log('error fetching "current" data'))
+  }).catch(err => console.log(err, 'error fetching "current" data'))
 })
 
 //Gets what week we're up to in RL
@@ -100,7 +102,6 @@ function getCurrent() {
 
 //Gets the schedule for that week
 function getSchedule(weekNumber) {
-  console.log(`my secret api key is ${key}`)
   return new Promise(function (resolve, reject) {
     axios.post(`https://profootballapi.com/schedule?api_key=${key}&year=2017&week=${weekNumber}&season_type=REG`).then(result =>{
       let idArray = result.data.map(el => {
@@ -116,14 +117,16 @@ function getSchedule(weekNumber) {
 
 //gets the game ids for that week's schedule
 function getGame(gameId) {
-  return new Promise(function (resolve, reject) {
-    axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
-      resolve(result.data);
+  if (gameId !== 2017091006) {
+    return new Promise(function (resolve, reject) {
+      axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
+        resolve(result.data);
+      })
+      .catch(err => {
+        reject(console.log('error calling for game by id'))
+      })
     })
-    .catch(err => {
-      reject(console.log('error calling for game by id on line 15'))
-    })
-  })
+  }
 }
 
 async function finishPlayers(playersArray) {
@@ -216,7 +219,6 @@ function getPlayerInfo(player, team, stats) {
 }
 
 function postPlayer(player) {
-  console.log('posting')
   let seasonStats = {
     rushAttempts: player.stats.rushAttempts,
     rushYards: player.stats.rushYards,
@@ -260,8 +262,6 @@ function postPlayer(player) {
 }
 
 function patchPlayer(player, current) {
-  console.log(player, 'Is the player')
-  console.log(current, 'Is stats thusfar');
   return new Promise(function (resolve, reject) {
     if (!current.stats.games.hasOwnProperty(player.week)) {
       player.totalPoints = (player.rushYards + player.recYards)/10
