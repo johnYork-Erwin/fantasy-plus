@@ -50,24 +50,24 @@ class TargetShareGraph extends React.Component {
   componentDidMount() {
     let lineData = this.createData();
     var vis = d3.select('#TargetShare'),
-    WIDTH = 500,
-    HEIGHT = 200,
-    MARGINS = {
-      top: 20,
-      right: 30,
-      bottom: 20,
-      left: 30
-    },
-    xRange = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function(d) {
-      return d.x;
-    }), d3.max(lineData, function(d) {
-      return d.x;
-    })]),
-    yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function(d) {
-      return d.y;
-    }), d3.max(lineData, function(d) {
-      return d.y;
-    })])
+      WIDTH = 500,
+      HEIGHT = 200,
+      MARGINS = {
+        top: 20,
+        right: 30,
+        bottom: 20,
+        left: 30
+      },
+      xRange = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(lineData, function(d) {
+        return d.x;
+      }), d3.max(lineData, function(d) {
+        return d.x;
+      })]),
+      yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function(d) {
+        return d.y;
+      }), d3.max(lineData, function(d) {
+        return d.y;
+      })])
     let xAxis = d3.axisBottom(xRange)
     let yAxis = d3.axisLeft(yRange)
 

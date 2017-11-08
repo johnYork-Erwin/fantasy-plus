@@ -3,6 +3,7 @@ import axios from 'axios';
 import GameScript from './graphics/GameScript.js';
 import PlayTypes from './graphics/PlayTypes.js';
 import {Table} from 'react-materialize';
+import {Link} from 'react-router-dom'
 
 class PlayerGame extends React.Component {
   constructor(props) {
@@ -168,7 +169,7 @@ class PlayerGame extends React.Component {
           <PlayTypes playTypesValue={this.state.currentWeek} playersTeam={this.state.currentTeam}/>
         </div>
         }
-        <button onClick={() => {window.location.href='/'}}>Back to Splash</button>
+        <Link to="/"><button>Back to Splash</button></Link>
       </div>
     )
   }

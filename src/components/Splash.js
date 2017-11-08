@@ -62,6 +62,7 @@ class Splash extends React.Component {
 
   addPlayerToUser() {
     axios.post(`/userPlayers/${this.state.playerFound.id}`).then(result => {
+      this.props.getPlayers();
     }).catch(err => {
     })
   }
@@ -71,6 +72,7 @@ class Splash extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className="main">
         {this.props.loggedIn &&

@@ -69,60 +69,62 @@ router.get('/external', (req, res, next) => {
 
 function update(weekToUpdate) {
   console.log(`updating week ${weekToUpdate}`)
-  let players = [];
-  getSchedule(weekToUpdate)
-  .then(result => {
-    //gets game data for the given game ids
-    let array = [];
-    for (let i = 0; i < result.length; i++) {
-      array.push(getGame(result[i]));
-    }
-    return Promise.all(array);
-  }).then(games => {
-    let array = [];
-    for (let i = 0; i < games.length; i++) {
-      if (games[i] !== undefined) {
-        array.push(scrubHelper(games[i]))
+  return new Promise(function (resolve, reject) {
+    let players = [];
+    getSchedule(weekToUpdate)
+    .then(result => {
+      //gets game data for the given game ids
+      let array = [];
+      for (let i = 0; i < result.length; i++) {
+        array.push(getGame(result[i]));
       }
-    }
-    //scrubs the game data
-    return Promise.all(array);
-  }).then(gameStats => {
-    let array = [];
-    for (let i = 0; i < gameStats.length; i++) {
-      players.push(gameStats[i].players);
-      let teams = [];
-      for (let team in gameStats[i].teams) {
-        teams.push(buildTeamPatch(gameStats[i].teams[team]));
+      return Promise.all(array);
+    }).then(games => {
+      let array = [];
+      for (let i = 0; i < games.length; i++) {
+        if (games[i] !== undefined) {
+          array.push(scrubHelper(games[i]))
+        }
       }
-      array.push(Promise.all(teams));
-    }
-    return Promise.all(array);
-  }).then(builtTeams => {
-    let array = [];
-    for (let i = 0; i < builtTeams.length; i++) {
-      let newArray = [];
-      for (let team in builtTeams[i]) {
-        newArray.push(patchTeam(builtTeams[i][team]))
+      //scrubs the game data
+      return Promise.all(array);
+    }).then(gameStats => {
+      let array = [];
+      for (let i = 0; i < gameStats.length; i++) {
+        players.push(gameStats[i].players);
+        let teams = [];
+        for (let team in gameStats[i].teams) {
+          teams.push(buildTeamPatch(gameStats[i].teams[team]));
+        }
+        array.push(Promise.all(teams));
       }
-      array.push(Promise.all(newArray));
-    }
-    return Promise.all(array);
+      return Promise.all(array);
+    }).then(builtTeams => {
+      let array = [];
+      for (let i = 0; i < builtTeams.length; i++) {
+        let newArray = [];
+        for (let team in builtTeams[i]) {
+          newArray.push(patchTeam(builtTeams[i][team]))
+        }
+        array.push(Promise.all(newArray));
+      }
+      return Promise.all(array);
 
-    //switching to work on players
-  }).then(results => {
-    let playersArray = [];
-    for (let i = 0; i < players.length; i++) {
-      for (let player in players[i]) {
-        players[i][player].player_name = player;
-        playersArray.push(addTeamId(players[i][player]))
+      //switching to work on players
+    }).then(results => {
+      let playersArray = [];
+      for (let i = 0; i < players.length; i++) {
+        for (let player in players[i]) {
+          players[i][player].player_name = player;
+          playersArray.push(addTeamId(players[i][player]))
+        }
       }
-    }
-    return Promise.all(playersArray)
-  }).then(playersArray => {
-    return finishPlayers(playersArray)
-  }).then(result => {
-    return 'successfully updated the week';
+      return Promise.all(playersArray)
+    }).then(playersArray => {
+      return finishPlayers(playersArray)
+    }).then(result => {
+      resolve( 'successfully updated the week' );
+    }).catch(err => reject(err))
   })
 }
 

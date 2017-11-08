@@ -16,28 +16,13 @@ class App extends Component {
     this.state = {
       loggedIn: false,
       userInfo: {},
+      userPlayers: [],
     }
     this.logIn = this.logIn.bind(this);
     this.update = this.update.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.getPlayers = this.getPlayers.bind(this);
   }
-
-  componentWillMount() {
-    let loggedIn = false;
-    axios.get('/token').then(result => {
-      if (result.data === true) {
-        loggedIn = true;
-      }
-      this.setState({
-        loggedIn: loggedIn
-      })
-    }).catch(err => console.log(err))
-  }
-
-  componentDidMount() {
-    console.log(this.state)
-  }
-
 
   signUp(information) {
     console.log(`reached signup with ${information}`);
@@ -84,6 +69,28 @@ class App extends Component {
     })
   }
 
+  getPlayers() {
+    if (this.state.loggedIn) {
+      axios.get(`/userPlayers/`)
+      .then(result => {
+        let array = [];
+        for (let i = 0; i < result.data.length; i++) {
+          array.push(axios(`/players/byId/${result.data[i].player_id}`))
+        }
+        return Promise.all(array)
+      })
+      .then(results => {
+        results = results.map(function(item) {
+          return item.data[0];
+        })
+        this.setState({
+          userPlayers: results,
+        })
+      })
+      .catch(err => console.log(err))
+    }
+  }
+
   render() {
     return (
       <MuiThemeProvider>
@@ -92,12 +99,12 @@ class App extends Component {
             <Banner loggedIn={this.state.loggedIn} update={this.update} logOut={this.logOut} signUp={this.signUp} logIn={this.logIn} userInfo={this.state.userInfo}/>
             <div className='container'>
               {this.state.loggedIn &&
-                <SideBar userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
+                <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
               }
-              <Route exact path='/' render={() => <Splash loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route exact path='/player/:id' render={() => <Player/>}/>
-              <Route exact path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route exact path='/playerGame/:playerId/:teamId/:week' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/player/:id' render={(props) => <Player {...props} />}/>
+              <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/playerGame/:playerId/:teamId/:week' render={(props) => <PlayerGame {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
             </div>
           </div>
         </Router>

@@ -4,6 +4,7 @@ import {Table} from 'react-materialize';
 import FantasyPointsGraph from './graphics/FantasyPointsGraph.js';
 import TargetShareGraph from './graphics/TargetShareGraph.js';
 import PlayTypes from './graphics/PlayTypes.js';
+import { Link} from 'react-router-dom';
 
 class Player extends React.Component {
   constructor(props) {
@@ -18,8 +19,7 @@ class Player extends React.Component {
   }
 
   componentWillMount() {
-    let playerId = window.location.href.match(/[/]\d+/g)
-    playerId = playerId[0].slice(1)
+    let playerId = this.props.match.params.id
     let currentPlayer = '';
     axios.get(`/players/byId/${playerId}`)
       .then(result => {
@@ -153,10 +153,10 @@ class Player extends React.Component {
             </thead>
             <tbody>
               {Object.keys(this.state.currentPlayer.stats.games).map(function(week, index) {
-                return <tr onClick={() => {window.location.href=`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`}} key={index}>{self.state.cares.map(function(care, index) {
+                return <tr onClick={() => self.props.history.push(`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`)} key={index}>{self.state.cares.map(function(care, index) {
                   return self.formattingForTable(week, care, index)
                 })}
-                </tr>
+              </tr>
               })}
               <tr>
                 {this.state.cares.map(function(care, index) {
@@ -177,7 +177,7 @@ class Player extends React.Component {
             })}
           </select>
           <PlayTypes playTypesValue={this.state.playTypesValue} playersTeam={this.state.playersTeam}/>
-          <button onClick={() => {window.location.href='/'}}>Back to Splash</button>
+          <Link to="/"><button>Back to Splash</button></Link>
         </div>
         }
       </div>
