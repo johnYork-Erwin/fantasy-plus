@@ -86,25 +86,25 @@ class Splash extends React.Component {
           </form>
         }
         {this.state.playerFound && this.props.loggedIn &&
-          <div className="tableContainer">
-            <Table>
-              <thead>
-                <tr>
-                  <th data-field='player_name_full'>Name</th>
-                  <th data-field='team_code'>Team</th>
-                  <th data-field='position'>Position</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{this.state.playerFound.player_name_full}</td>
-                  <td>{this.state.playerFound.team_code}</td>
-                  <td>{this.state.playerFound.position}</td>
-                  <button onClick={this.addPlayerToUser}>Add Player</button>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
+        <div className="tableContainer">
+          <Table>
+            <thead>
+              <tr>
+                <th data-field='player_name_full'>Name</th>
+                <th data-field='team_code'>Team</th>
+                <th data-field='position'>Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{this.state.playerFound.player_name_full}</td>
+                <td>{this.state.playerFound.team_code}</td>
+                <td>{this.state.playerFound.position}</td>
+                <button onClick={this.addPlayerToUser}>Add Player</button>
+              </tr>
+            </tbody>
+          </Table>
+        </div>
         }
         <div className="center">
           <label>
@@ -128,8 +128,8 @@ class Splash extends React.Component {
             </tr>
           </thead>
             <tbody>
-              {this.state.leaders && this.state.leaders.map(function(player) {
-                return (<tr>
+              {this.state.leaders && this.state.leaders.map(function(player, index) {
+                return (<tr key={index}>
                   <td>{player.player_name_full}</td>
                   <td>{player.team_code}</td>
                   <td>{player.position}</td>

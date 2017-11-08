@@ -14,12 +14,28 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: true,
+      loggedIn: false,
       userInfo: {},
     }
     this.logIn = this.logIn.bind(this);
     this.update = this.update.bind(this);
     this.logOut = this.logOut.bind(this);
+  }
+
+  componentWillMount() {
+    let loggedIn = false;
+    axios.get('/token').then(result => {
+      if (result.data === true) {
+        loggedIn = true;
+      }
+      this.setState({
+        loggedIn: loggedIn
+      })
+    }).catch(err => console.log(err))
+  }
+
+  componentDidMount() {
+    console.log(this.state)
   }
 
 
@@ -28,17 +44,14 @@ class App extends Component {
     axios.post('/users', information)
       .then(response => {
         console.log('posted to users successfully now trying to get a token')
-        return axios.post('/token', information)
+        return this.logIn(information)
       }).then(response => {
-        this.setState({
-          loggedIn: true,
-        })
+        console.log('signed up successfully!');
       })
       .catch(err => console.log('sign up failed'))
   }
 
   logIn(information) {
-    console.log(`reached login with ${information}`)
     axios.post('/token', information)
       .then(response => {
         let object = {
@@ -58,12 +71,13 @@ class App extends Component {
         loggedIn: false,
         userInfo: {},
       })
+      window.location.href = '/'
     }).catch(err => console.log('could not log out'));
   }
 
   update() {
     console.log('updating')
-    axios.get('/external/update').then(result => {
+    axios.get('/external').then(result => {
       console.log(result)
     }).catch(err => {
       console.log('error!')
@@ -83,7 +97,7 @@ class App extends Component {
               <Route exact path='/' render={() => <Splash loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
               <Route exact path='/player/:id' render={() => <Player/>}/>
               <Route exact path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route exact path='/specificGame/:game/:player' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route exact path='/playerGame/:playerId/:teamId/:week' render={() => <PlayerGame loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
             </div>
           </div>
         </Router>

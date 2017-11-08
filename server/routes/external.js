@@ -24,12 +24,53 @@ const playerPlate = {
   },
 }
 
-router.get('/external/update', (req, res, next) => {
-  let players = [];
-  getCurrent().then(result => {
-    //returns an array of game ids for the week
-    return getSchedule(5);
+//Gets what week we're up to in our database
+function getCurrent() {
+  return new Promise(function (resolve, reject) {
+    knex('current')
+      .then(result => {
+        resolve(result[0].upToDateThrough);
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
+}
+
+//Gets what week we're up to in RL
+function getReal() {
+  return new Promise(function (resolve, reject) {
+    axios.get('http://api.suredbits.com/nfl/v0/info').then(result => {
+      resolve(result.data.week.slice(7))
+    }).catch(err => reject(err))
+  })
+}
+
+router.get('/external', (req, res, next) => {
+  let upToDateThrough;
+  getCurrent().then(result => {
+    upToDateThrough = result;
+    return getReal();
+  }).then(result => {
+    let array = [];
+    for (let i = upToDateThrough+1; i < result; i++) {
+      array.push(update(i));
+      upToDateThrough = i;
+    }
+    return Promise.all(array);
+  }).then(result => {
+    console.log(result)
+    let obj = {upToDateThrough: upToDateThrough}
+    return knex('current').first().update(obj)
+  }).then(result => {
+    res.send('successfully updated our DB!')
+  }).catch(err => next(err))
+})
+
+function update(weekToUpdate) {
+  console.log(`updating week ${weekToUpdate}`)
+  let players = [];
+  getSchedule(weekToUpdate)
   .then(result => {
     //gets game data for the given game ids
     let array = [];
@@ -37,8 +78,7 @@ router.get('/external/update', (req, res, next) => {
       array.push(getGame(result[i]));
     }
     return Promise.all(array);
-  })
-  .then(games => {
+  }).then(games => {
     let array = [];
     for (let i = 0; i < games.length; i++) {
       if (games[i] !== undefined) {
@@ -47,8 +87,7 @@ router.get('/external/update', (req, res, next) => {
     }
     //scrubs the game data
     return Promise.all(array);
-  })
-  .then(gameStats => {
+  }).then(gameStats => {
     let array = [];
     for (let i = 0; i < gameStats.length; i++) {
       players.push(gameStats[i].players);
@@ -83,20 +122,7 @@ router.get('/external/update', (req, res, next) => {
   }).then(playersArray => {
     return finishPlayers(playersArray)
   }).then(result => {
-    console.log('successfully updated the week');
-  }).catch(err => console.log(err, 'error fetching "current" data'))
-})
-
-//Gets what week we're up to in RL
-function getCurrent() {
-  return new Promise(function (resolve, reject) {
-    knex('current')
-      .then(result => {
-        resolve(result[0].upToDateThrough);
-      })
-      .catch(err => {
-        reject(err)
-      })
+    return 'successfully updated the week';
   })
 }
 
@@ -135,7 +161,6 @@ async function finishPlayers(playersArray) {
     let player = playersArray.splice(0,1);
     let temp = await updatePlayer(player)
     finishedArray = finishedArray.concat([temp])
-    console.log('finsihed 1 tick', finishedArray.length);
   }
   return finishedArray;
 }

@@ -8,7 +8,8 @@ const jwt = require('jsonwebtoken');
 const authorize = function(req, res, next) {
   jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
     if (err) {
-      return next(boom.create(401, 'Log in in order to save a player'));
+      console.log('Log in in order to save a player')
+      throw(err)
     }
     req.claim = payload;
     return next();

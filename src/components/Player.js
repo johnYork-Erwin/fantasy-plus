@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import {Table} from 'react-materialize';
-import FantasyPointsGraph from './FantasyPointsGraph.js';
-import TargetShareGraph from './TargetShareGraph.js';
-import PlayTypes from './PlayTypes.js';
+import FantasyPointsGraph from './graphics/FantasyPointsGraph.js';
+import TargetShareGraph from './graphics/TargetShareGraph.js';
+import PlayTypes from './graphics/PlayTypes.js';
 
 class Player extends React.Component {
   constructor(props) {
@@ -153,7 +153,7 @@ class Player extends React.Component {
             </thead>
             <tbody>
               {Object.keys(this.state.currentPlayer.stats.games).map(function(week, index) {
-                return <tr key={index}>{self.state.cares.map(function(care, index) {
+                return <tr onClick={() => {window.location.href=`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`}} key={index}>{self.state.cares.map(function(care, index) {
                   return self.formattingForTable(week, care, index)
                 })}
                 </tr>
@@ -177,6 +177,7 @@ class Player extends React.Component {
             })}
           </select>
           <PlayTypes playTypesValue={this.state.playTypesValue} playersTeam={this.state.playersTeam}/>
+          <button onClick={() => {window.location.href='/'}}>Back to Splash</button>
         </div>
         }
       </div>
