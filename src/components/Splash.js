@@ -15,6 +15,7 @@ class Splash extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
     this.getLeaders = this.getLeaders.bind(this)
+    this.handleClickName = this.handleClickName.bind(this)
   }
 
   handleChange(e) {
@@ -49,6 +50,7 @@ class Splash extends React.Component {
         object.team_code = player.team_code;
         object.touchdowns = player.stats.seasonStats.totalTd;
         object.position = player.position;
+        object.id = player.id;
         return object;
       })
       this.setState({
@@ -58,6 +60,21 @@ class Splash extends React.Component {
     .catch(err => {
       console.log(err)
     })
+  }
+
+  handleClickName(e) {
+    if (this.props.loggedIn) {
+      let id;
+      let target = this.state.leaders.filter(function(player) {
+        if (player.player_name_full === e.target.text) return player
+        else return null;
+      }, [])
+      id = target[0].id;
+      axios.post(`/userPlayers/${id}`).then(result => {
+        this.props.getPlayers();
+      }).catch(err => {
+      })
+    }
   }
 
   addPlayerToUser() {
@@ -72,7 +89,7 @@ class Splash extends React.Component {
   }
 
   render() {
-    console.log(this.props)
+    const self = this;
     return (
       <div className="main">
         {this.props.loggedIn &&
@@ -132,7 +149,7 @@ class Splash extends React.Component {
             <tbody>
               {this.state.leaders && this.state.leaders.map(function(player, index) {
                 return (<tr key={index}>
-                  <td>{player.player_name_full}</td>
+                  <td><a onClick={self.handleClickName}>{player.player_name_full}</a></td>
                   <td>{player.team_code}</td>
                   <td>{player.position}</td>
                   <td>{player.touchdowns}</td>

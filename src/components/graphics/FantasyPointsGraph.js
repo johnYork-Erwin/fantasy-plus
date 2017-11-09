@@ -5,6 +5,7 @@ class FantasyPointsGraph extends React.Component {
   constructor(props) {
     super(props);
     this.cleanPlayer = this.cleanPlayer.bind(this)
+    this.graph = this.graph.bind(this)
   }
 
   cleanPlayer() {
@@ -18,7 +19,9 @@ class FantasyPointsGraph extends React.Component {
     return retVal;
   }
 
-  componentDidMount() {
+  graph() {
+    const clear = d3.select('#FantasyPoints')
+    clear.selectAll("*").remove();
     let lineData = this.cleanPlayer();
     var vis = d3.select('#FantasyPoints'),
     WIDTH = 500,
@@ -65,6 +68,16 @@ class FantasyPointsGraph extends React.Component {
       .attr('stroke', 'blue')
       .attr('stroke-width', 2)
       .attr('fill', 'none');
+  }
+
+  componentDidMount() {
+    this.graph();
+  }
+
+  componentDidUpdate(nextProps) {
+    if (nextProps.currentPlayer.id !== this.props.currentPlayer.id) {
+      this.graph();
+    }
   }
 
   render() {

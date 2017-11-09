@@ -51,19 +51,19 @@ class PlayerGame extends React.Component {
           data = (player.stats.games[this.state.currentWeek].passCompletions/(player.stats.games[this.state.currentWeek].passAttempts)).toFixed(2);
         }
         break;
-      case 'passes':
+      case 'pass attempts':
         data = player.stats.games[this.state.currentWeek].passAttempts;
         break;
-      case 'passes completed':
+      case 'pass completions':
         data = player.stats.games[this.state.currentWeek].passCompletions;
         break;
-      case 'passing yards':
+      case 'pass yards':
         data = player.stats.games[this.state.currentWeek].passYards;
         break;
-      case 'pass TD':
+      case 'pass TDs':
         data = player.stats.games[this.state.currentWeek].passTd;
         break;
-      case 'interceptions':
+      case 'ints':
         data = player.stats.games[this.state.currentWeek].int;
         break;
       default:
@@ -91,7 +91,7 @@ class PlayerGame extends React.Component {
         } else if (currentPlayer.position === 'RB') {
           array = ['player name', 'fumbles', 'targets', 'receptions', 'reception yards', 'reception TDs', 'rush attempts', 'rush yards', 'rush TDs', 'total points']
         } else if (currentPlayer.position === 'QB') {
-          array = ['player name', 'fumbles', 'int', 'rush attempts', 'rush yards', 'rush TDs', 'pass attempts', 'pass completions', 'pass yards', 'pass TDs', 'total points']
+          array = ['player name', 'fumbles', 'ints', 'rush attempts', 'rush yards', 'rush TDs', 'pass attempts', 'pass completions', 'pass yards', 'pass TDs', 'total points']
         }
         cares = cares.concat(array);
       })
@@ -126,7 +126,7 @@ class PlayerGame extends React.Component {
   render() {
     const self = this;
     return (
-      <div className="main">
+      <div>
         {this.state &&
         <div className="wrapper">
           <h1 className="center">{this.state.currentPlayer.player_name_full} Week {this.state.currentWeek}, {this.state.currentTeam.stats.games[this.state.currentWeek].home ? 'Home': 'Away'} </h1>
@@ -163,13 +163,19 @@ class PlayerGame extends React.Component {
               </tbody>
             </Table>
           </div>
-          <h4>Score Throughout The Game</h4>
-          <GameScript currentTeam={this.state.currentTeam} currentWeek={this.state.currentWeek} script={this.state.currentTeam.stats.games[this.state.currentWeek].gameScript}/>
-          <h4>Play Types Called</h4>
-          <PlayTypes playTypesValue={this.state.currentWeek} playersTeam={this.state.currentTeam}/>
+          <div id="PlayGameStats">
+            <div className="leftHalf">
+              <h4>Score Throughout The Game</h4>
+              <GameScript currentTeam={this.state.currentTeam} currentWeek={this.state.currentWeek} script={this.state.currentTeam.stats.games[this.state.currentWeek].gameScript}/>
+            </div>
+            <div className="rightHalf">
+              <h4>Play Types Called</h4>
+              <PlayTypes playTypesValue={this.state.currentWeek} playersTeam={this.state.currentTeam}/>
+            </div>
+            <Link to="/"><button className="back">Back to Home</button></Link>
+          </div>
         </div>
         }
-        <Link to="/"><button>Back to Splash</button></Link>
       </div>
     )
   }

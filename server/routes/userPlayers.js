@@ -16,6 +16,17 @@ const authorize = function(req, res, next) {
   });
 };
 
+router.delete('/userPlayers/:id', authorize, (req, res, next) => {
+  knex('users-players').where('user_id', '=', req.claim.userId).andWhere('player_id', '=', req.params.id).del().then(results => {
+    if (results === 1) {
+      res.send('success')
+    } else res.send('failure')
+  })
+  .catch(err => {
+    console.log(err)
+  })
+})
+
 router.get('/userPlayers', authorize, (req, res, next) => {
   knex('users-players').where('user_id', '=', req.claim.userId).select('player_id')
     .then(results => {

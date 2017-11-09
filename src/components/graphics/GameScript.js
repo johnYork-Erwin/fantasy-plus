@@ -13,6 +13,11 @@ class GameScript extends React.Component {
     this.graph(data);
   }
 
+  componentDidUpdate(nextProps) {
+    console.log(this.props);
+    console.log(nextProps);
+  }
+
   cleanData() {
     let data = this.props.script
     data.unshift([3600,0,0]);
@@ -65,6 +70,8 @@ class GameScript extends React.Component {
   }
 
   graph(data) {
+    let clear = d3.select("#GameScript")
+    clear.selectAll("*").remove();
     var svg = d3.select("#GameScript"),
         width = svg.attr("width"),
         height = svg.attr("height"),
@@ -102,6 +109,7 @@ class GameScript extends React.Component {
   render() {
     return (
       <svg id="GameScript" width="300" height="300"> </svg>
+
     )
   }
 }

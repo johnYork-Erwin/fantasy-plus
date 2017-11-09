@@ -1,11 +1,5 @@
 import React from 'react';
 import Modal from 'react-modal';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Row} from 'react-materialize';
-
-const buttonStyles = {
-  margin: 12,
-}
 
 const customStyles = {
   content : {
@@ -79,41 +73,35 @@ class Banner extends React.Component {
   render() {
     return (
       <header className='banner'>
-        <Row>
-          <h1> Welcome {this.props.loggedIn ? this.props.userInfo.username: ''} to Fantasy Plus! </h1>
-          <RaisedButton
-            style={buttonStyles}
-            label={this.props.loggedIn ? 'Log Out': 'Log In'}
-            primary={true}
-            onClick={()=> {
-              if (this.props.loggedIn) this.props.logOut();
-              else this.openModal();
-            }}
-          />
-          <RaisedButton onClick={this.props.update} style={buttonStyles} secondary={true} label="Update DB" className='updateDB'/>
-        </Row>
+        <h1> Welcome {this.props.loggedIn ? this.props.userInfo.username: ''} to Fantasy Plus! </h1>
+        <button id='logIn' onClick={()=> {
+            if (this.props.loggedIn) this.props.logOut();
+            else this.openModal();
+          }}>{this.props.loggedIn ? 'Log Out': 'Log In'}</button>
+        <button onClick={this.props.update} className='updateDB'>Update DB</button>
         <Modal
+          id="login"
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Modal">
-        <h2 ref={subtitle => this.subtitle = subtitle}>Log In</h2>
-        <form id="logInForm" name="form">
-          <label>
-            Username:
-          </label>
-          <input type="text" name="username" value={this.state.username} placeholder="username" onChange={this.handleChange}/>
-          <label>
-            Password:
-          </label>
-          <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
-          <RaisedButton style={buttonStyles} onClick={this.closeModal} primary={true} label="Cancel"/>
-          <RaisedButton onClick={() => this.validate('logIn')} style={buttonStyles} label="Log In" primary={true}/>
-          <RaisedButton onClick={() => this.validate('signUp')} style={buttonStyles} label="Sign Up" primary={true}/>
-        </form>
-      </Modal>
-  </header>
+          <h2 ref={subtitle => this.subtitle = subtitle}>Log In</h2>
+          <form id="logInForm" name="form">
+            <label>
+              Username:
+            </label>
+            <input type="text" name="username" value={this.state.username} placeholder="username" onChange={this.handleChange}/>
+            <label>
+              Password:
+            </label>
+            <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
+            <button onClick={this.closeModal}>Cancel</button>
+            <button onClick={() => this.validate('logIn')} label="Log In">Log In</button>
+            <button onClick={() => this.validate('signUp')}>Sign Up</button>
+          </form>
+        </Modal>
+      </header>
     )
   }
 }

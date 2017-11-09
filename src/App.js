@@ -14,7 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
+      loggedIn: true,
       userInfo: {},
       userPlayers: [],
     }
@@ -46,7 +46,6 @@ class App extends Component {
           loggedIn: true,
           userInfo: object,
         })
-        console.log(this.state)
       }).catch(err => console.log('could not get you a token'))
   }
 
@@ -92,6 +91,12 @@ class App extends Component {
   }
 
   render() {
+    const divStyle = {
+      gridColumn: '1/11'
+    }
+    if (this.state.loggedIn) {
+      divStyle.gridColumn = '2/11'
+    }
     return (
       <MuiThemeProvider>
         <Router>
@@ -101,10 +106,12 @@ class App extends Component {
               {this.state.loggedIn &&
                 <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
               }
-              <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route path='/player/:id' render={(props) => <Player {...props} />}/>
-              <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              <Route path='/playerGame/:playerId/:teamId/:week' render={(props) => <PlayerGame {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <div className='main' style={divStyle}>
+                <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+                <Route path='/player/:id' render={(props) => <Player {...props} />}/>
+                <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+                <Route path='/playerGame/:playerId/:teamId/:week' render={(props) => <PlayerGame {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              </div>
             </div>
           </div>
         </Router>

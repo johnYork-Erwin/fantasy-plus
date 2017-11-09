@@ -19,7 +19,7 @@ router.get('/players/:playerName', (req, res, next) => {
 
 router.get('/players/leaders/:position', (req, res, next) => {
   knex('players').innerJoin('teams', 'teams.id', 'players.team_id').where('position', '=', req.params.position).orderBy('total_points', 'desc')
-    .select('players.position', 'players.player_name_full', 'teams.team_code', 'players.total_points', 'players.stats')
+    .select('players.id', 'players.position', 'players.player_name_full', 'teams.team_code', 'players.total_points', 'players.stats')
     .then(results => {
       res.send(results.slice(0,5))
     })

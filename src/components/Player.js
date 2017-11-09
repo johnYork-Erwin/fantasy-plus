@@ -16,9 +16,18 @@ class Player extends React.Component {
     this.formattingForTable = this.formattingForTable.bind(this);
     this.format = this.format.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.getPlayer = this.getPlayer.bind(this)
   }
 
   componentWillMount() {
+    this.getPlayer();
+  }
+
+  componentWillUpdate() {
+    this.getPlayer();
+  }
+
+  getPlayer() {
     let playerId = this.props.match.params.id
     let currentPlayer = '';
     axios.get(`/players/byId/${playerId}`)
@@ -134,7 +143,7 @@ class Player extends React.Component {
   render() {
     const self = this;
     return (
-      <div className="main">
+      <div>
         {this.state.cares &&
         <div className="wrapper">
           <h1>{this.state.currentPlayer.player_name_full} / {this.state.currentPlayer.position} / {this.state.currentPlayer.status}</h1>
@@ -177,7 +186,7 @@ class Player extends React.Component {
             })}
           </select>
           <PlayTypes playTypesValue={this.state.playTypesValue} playersTeam={this.state.playersTeam}/>
-          <Link to="/"><button>Back to Splash</button></Link>
+          <Link to="/"><button className="back">Back to Home</button></Link>
         </div>
         }
       </div>

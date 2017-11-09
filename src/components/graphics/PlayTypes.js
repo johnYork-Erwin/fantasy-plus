@@ -8,9 +8,11 @@ class PlayTypes extends React.Component {
     this.graph = this.graph.bind(this)
   }
 
-  componentDidUpdate() {
-    const data = this.createData();
-    this.graph(data);
+  componentDidUpdate(nextProps) {
+    if (this.props.playTypesValue !== nextProps.playTypesValue || this.props.playersTeam.id !== nextProps.playersTeam.id) {
+      const data = this.createData();
+      this.graph(data)
+    }
   }
 
   componentDidMount() {
@@ -37,6 +39,8 @@ class PlayTypes extends React.Component {
   }
 
   graph(data) {
+    let clear = d3.select('#PlayTypes')
+    clear.selectAll("*").remove();
     var svg = d3.select("#PlayTypes"),
         width = svg.attr("width"),
         height = svg.attr("height"),

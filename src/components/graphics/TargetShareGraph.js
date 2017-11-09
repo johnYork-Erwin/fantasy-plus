@@ -4,17 +4,14 @@ var d3 = require('d3');
 class TargetShareGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentPlayer: this.props.currentPlayer,
-      playersTeam: this.props.playersTeam,
-    }
     this.createData = this.createData.bind(this)
+    this.graph = this.graph.bind(this)
   }
 
   createData() {
     let type;
     let outOf;
-    let playerType = this.state.currentPlayer.position;
+    let playerType = this.props.currentPlayer.position;
     switch(playerType) {
       case 'QB':
         type = 'passAttempts';
@@ -41,13 +38,15 @@ class TargetShareGraph extends React.Component {
     for (let key in this.props.currentPlayer.stats.games) {
       let obj = {};
       obj.x = Number(key)
-      obj.y = this.state.currentPlayer.stats.games[key][type]/this.state.playersTeam.stats.games[key][outOf].attempts;
+      obj.y = this.props.currentPlayer.stats.games[key][type]/this.props.playersTeam.stats.games[key][outOf].attempts;
       retVal.push(obj)
     }
     return retVal;
   }
 
-  componentDidMount() {
+  graph() {
+    let clear = d3.select("#TargetShare");
+    clear.selectAll("*").remove();
     let lineData = this.createData();
     var vis = d3.select('#TargetShare'),
       WIDTH = 500,
@@ -94,6 +93,16 @@ class TargetShareGraph extends React.Component {
       .attr('stroke', 'blue')
       .attr('stroke-width', 2)
       .attr('fill', 'none');
+  }
+
+  componentDidUpdate(nextProps) {
+    if (this.props.currentPlayer.id !== nextProps.currentPlayer.id || this.props.playersTeam.id !== nextProps.playersTeam.id) {
+      this.graph();
+    }
+  }
+
+  componentDidMount() {
+    this.graph();
   }
 
   render() {
