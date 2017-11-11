@@ -37,9 +37,7 @@ class FantasyPointsGraph extends React.Component {
     }), d3.max(lineData, function(d) {
       return d.x;
     })]),
-    yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function(d) {
-      return d.y;
-    }), d3.max(lineData, function(d) {
+    yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, d3.max(lineData, function(d) {
       return d.y;
     })])
     let xAxis = d3.axisBottom(xRange)

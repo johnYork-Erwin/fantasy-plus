@@ -12,6 +12,17 @@ router.get('/teams/players/:position/:teamId', (req, res, next) => {
     .catch(err => next(err))
 })
 
+router.get('/teamsByCode/:code', (req, res, next) => {
+  knex('teams').where('team_code', '=', req.params.code).then(result => {
+    if (result.length === 1) {
+      res.send(result)
+    } else {
+      next()
+    }
+  })
+  .catch(err => next(err))
+})
+
 router.get('/teams/:id', (req, res, next) => {
   knex('teams').where('id', '=', req.params.id).then(result => {
     res.send(result)

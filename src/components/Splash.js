@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Table} from 'react-materialize'
+import News from './News.js'
 
 class Splash extends React.Component {
   constructor(props) {
@@ -31,14 +32,15 @@ class Splash extends React.Component {
 
   handleSubmitSearch(e) {
     e.preventDefault();
-    console.log(`searching for ${this.state.playerSearch}`);
-    axios.get(`/players/${this.state.playerSearch}`).then(results => {
-      if (results.data !== 'player not found') {
-        this.setState({
-          playerFound: results.data,
-        })
-      }
-    }).catch(err => console.log(err))
+    if (this.state.playerSearch) {
+      axios.get(`/players/${this.state.playerSearch.trim()}`).then(results => {
+        if (results.data !== 'player not found') {
+          this.setState({
+            playerFound: results.data,
+          })
+        }
+      }).catch(err => console.log(err))
+    }
   }
 
   getLeaders() {
@@ -77,9 +79,13 @@ class Splash extends React.Component {
     }
   }
 
-  addPlayerToUser() {
-    axios.post(`/userPlayers/${this.state.playerFound.id}`).then(result => {
+  addPlayerToUser(player) {
+    axios.post(`/userPlayers/${player.id}`).then(result => {
       this.props.getPlayers();
+      this.setState({
+        playerFound: null,
+        playerSearch: '',
+      })
     }).catch(err => {
     })
   }
@@ -115,12 +121,14 @@ class Splash extends React.Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>{this.state.playerFound.player_name_full}</td>
-                <td>{this.state.playerFound.team_code}</td>
-                <td>{this.state.playerFound.position}</td>
-                <button onClick={this.addPlayerToUser}>Add Player</button>
-              </tr>
+              {this.state.playerFound.map(function(player, index) {
+                return <tr key={index}>
+                  <td>{player.player_name_full}</td>
+                  <td>{player.team_code}</td>
+                  <td>{player.position}</td>
+                  <td><button onClick={() => self.addPlayerToUser(player)}>Add Player</button></td>
+                </tr>
+              })}
             </tbody>
           </Table>
         </div>
@@ -158,6 +166,7 @@ class Splash extends React.Component {
               })}
             </tbody>
         </Table>
+        <News/>
       </div>
     )
   }

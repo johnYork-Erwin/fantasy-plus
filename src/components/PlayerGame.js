@@ -130,7 +130,7 @@ class PlayerGame extends React.Component {
         {this.state &&
         <div className="wrapper">
           <h1 className="center">{this.state.currentPlayer.player_name_full} Week {this.state.currentWeek}, {this.state.currentTeam.stats.games[this.state.currentWeek].home ? 'Home': 'Away'} </h1>
-          <h2 className="center">{this.state.currentTeam.team_code} vs. {this.state.currentTeam.stats.games[this.state.currentWeek].opp} ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
+          <h2 className="center"><Link to={`/teams/${this.state.currentTeam.id}`}>{this.state.currentTeam.team_code}</Link> vs. {this.state.currentTeam.stats.games[this.state.currentWeek].opp} ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
           <div className="holdPlays">
             <h2>Plays This Game Involving {this.state.currentPlayer.player_name_full}</h2>
             {this.state.currentPlayer.stats.games[this.state.currentWeek].plays.map(function(play, index) {

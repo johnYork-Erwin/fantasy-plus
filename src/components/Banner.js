@@ -39,7 +39,6 @@ class Banner extends React.Component {
       } else if (command === 'signUp') {
         this.props.signUp(object)
       }
-      console.log('setting state');
       this.setState({
         username: '',
         password: '',

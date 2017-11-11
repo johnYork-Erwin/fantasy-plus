@@ -30,7 +30,7 @@ class TargetShareGraph extends React.Component {
         outOf = 'rushing';
         break;
       default:
-        type = 'Tricking the tracker';
+        type = 'Tricky to';
         outOf = 'rocka rhyme';
         break;
     }
@@ -38,7 +38,7 @@ class TargetShareGraph extends React.Component {
     for (let key in this.props.currentPlayer.stats.games) {
       let obj = {};
       obj.x = Number(key)
-      obj.y = this.props.currentPlayer.stats.games[key][type]/this.props.playersTeam.stats.games[key][outOf].attempts;
+      obj.y = this.props.currentPlayer.stats.games[key][type]/this.props.playersTeam.stats.games[key][outOf].attempts
       retVal.push(obj)
     }
     return retVal;
@@ -62,11 +62,7 @@ class TargetShareGraph extends React.Component {
       }), d3.max(lineData, function(d) {
         return d.x;
       })]),
-      yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(lineData, function(d) {
-        return d.y;
-      }), d3.max(lineData, function(d) {
-        return d.y;
-      })])
+      yRange = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 1])
     let xAxis = d3.axisBottom(xRange)
     let yAxis = d3.axisLeft(yRange)
 

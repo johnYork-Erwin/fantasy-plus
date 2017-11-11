@@ -8,7 +8,6 @@ import Player from './components/Player.js';
 import Team from './components/Team.js';
 import PlayerGame from './components/PlayerGame.js';
 import Banner from './components/Banner.js';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
   constructor(props) {
@@ -98,24 +97,22 @@ class App extends Component {
       divStyle.gridColumn = '2/11'
     }
     return (
-      <MuiThemeProvider>
-        <Router>
-          <div className='background'>
-            <Banner loggedIn={this.state.loggedIn} update={this.update} logOut={this.logOut} signUp={this.signUp} logIn={this.logIn} userInfo={this.state.userInfo}/>
-            <div className='container'>
-              {this.state.loggedIn &&
-                <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
-              }
-              <div className='main' style={divStyle}>
-                <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-                <Route path='/player/:id' render={(props) => <Player {...props} />}/>
-                <Route path='/:team' render={() => <Team loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-                <Route path='/playerGame/:playerId/:teamId/:week' render={(props) => <PlayerGame {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
-              </div>
+      <Router>
+        <div className='background'>
+          <Banner loggedIn={this.state.loggedIn} update={this.update} logOut={this.logOut} signUp={this.signUp} logIn={this.logIn} userInfo={this.state.userInfo}/>
+          <div className='container'>
+            {this.state.loggedIn &&
+              <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
+            }
+            <div className='main' style={divStyle}>
+              <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/player/:id' render={(props) => <Player {...props} />}/>
+              <Route path='/teams/:id' render={(props) => <Team {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
+              <Route path='/playerGame/:playerId/:teamId/:week' render={(props) => <PlayerGame {...props} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
             </div>
           </div>
-        </Router>
-      </MuiThemeProvider>
+        </div>
+      </Router>
     );
   }
 }

@@ -23,6 +23,7 @@ const teams = require('./routes/teams')
 const userPlayers = require('./routes/userPlayers')
 const users = require('./routes/users')
 const token = require('./routes/token')
+const news = require('./routes/news')
 
 app.use(external)
 app.use(players)
@@ -30,6 +31,7 @@ app.use(teams)
 app.use(userPlayers)
 app.use(users)
 app.use(token)
+app.use(news)
 app.use(express.static(path.join(__dirname, "..", "build")));
 
 app.get("/*", function(req, res) {

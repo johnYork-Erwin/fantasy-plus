@@ -4,7 +4,7 @@ import {Table} from 'react-materialize';
 import FantasyPointsGraph from './graphics/FantasyPointsGraph.js';
 import TargetShareGraph from './graphics/TargetShareGraph.js';
 import PlayTypes from './graphics/PlayTypes.js';
-import { Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 class Player extends React.Component {
   constructor(props) {
@@ -162,7 +162,8 @@ class Player extends React.Component {
             </thead>
             <tbody>
               {Object.keys(this.state.currentPlayer.stats.games).map(function(week, index) {
-                return <tr onClick={() => self.props.history.push(`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`)} key={index}>{self.state.cares.map(function(care, index) {
+                return <tr onClick={() => self.props.history.push(`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`)}
+                    key={index}>{self.state.cares.map(function(care, index) {
                   return self.formattingForTable(week, care, index)
                 })}
               </tr>
