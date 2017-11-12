@@ -13,7 +13,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
+      loggedIn: true,
       userInfo: {},
       userPlayers: [],
     }
@@ -21,6 +21,7 @@ class App extends Component {
     this.update = this.update.bind(this);
     this.logOut = this.logOut.bind(this);
     this.getPlayers = this.getPlayers.bind(this);
+    this.testing = this.testing.bind(this)
   }
 
   signUp(information) {
@@ -89,6 +90,13 @@ class App extends Component {
     }
   }
 
+  testing() {
+    console.log('testing')
+    axios.get('/externalies').then(results => {
+      console.log(results)
+    }).catch(err => console.log(err))
+  }
+
   render() {
     const divStyle = {
       gridColumn: '1/11'
@@ -104,6 +112,7 @@ class App extends Component {
             {this.state.loggedIn &&
               <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
             }
+            <button onClick={() => this.testing()}> TESTING </button>
             <div className='main' style={divStyle}>
               <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
               <Route path='/player/:id' render={(props) => <Player {...props} />}/>

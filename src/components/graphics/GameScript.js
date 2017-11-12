@@ -14,8 +14,10 @@ class GameScript extends React.Component {
   }
 
   componentDidUpdate(nextProps) {
-    console.log(this.props);
-    console.log(nextProps);
+    if (this.props.currentTeam.id !== nextProps.currentTeam.id || this.props.currentWeek !== nextProps.currentWeek) {
+      let data = this.cleanData();
+      this.graph(data);
+    }
   }
 
   cleanData() {

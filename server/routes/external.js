@@ -24,6 +24,17 @@ const playerPlate = {
   },
 }
 
+router.get('/externalies', (req, res, next) => {
+  let gameId = 2017102908;
+  axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
+    let retVal = scrubHelper(result.data);
+    res.send(result.data)
+  })
+  .catch(err => {
+    next(err)
+  })
+})
+
 //Gets what week we're up to in our database
 function getCurrent() {
   return new Promise(function (resolve, reject) {
@@ -50,6 +61,7 @@ router.get('/external', (req, res, next) => {
   let upToDateThrough;
   getCurrent().then(result => {
     upToDateThrough = result;
+    console.log('db is current through week ' + result)
     return getReal();
   }).then(result => {
     let array = [];
@@ -57,10 +69,11 @@ router.get('/external', (req, res, next) => {
       array.push(update(i));
       upToDateThrough = i;
     }
+    console.log('reality is through week ' + result);
     return Promise.all(array);
   }).then(result => {
-    console.log(result)
     let obj = {upToDateThrough: upToDateThrough}
+    console.log('finished updating all the weeks!');
     return knex('current').first().update(obj)
   }).then(result => {
     res.send('successfully updated our DB!')
@@ -68,7 +81,6 @@ router.get('/external', (req, res, next) => {
 })
 
 function update(weekToUpdate) {
-  console.log(`updating week ${weekToUpdate}`)
   return new Promise(function (resolve, reject) {
     let players = [];
     getSchedule(weekToUpdate)
@@ -123,7 +135,7 @@ function update(weekToUpdate) {
     }).then(playersArray => {
       return finishPlayers(playersArray)
     }).then(result => {
-      resolve( 'successfully updated the week' );
+      console.log('successfully updated one week!');
     }).catch(err => reject(err))
   })
 }
@@ -151,7 +163,7 @@ function getGame(gameId) {
         resolve(result.data);
       })
       .catch(err => {
-        reject(console.log('error calling for game by id'))
+        reject(undefined)
       })
     })
   }
@@ -211,9 +223,11 @@ function getPlayerInfo(player, team, stats) {
       for (let i = 0; i < result.length; i++) {
         if (player.slice(0, -player.length+1) === result[i].firstName.slice(0, -result[i].firstName.length+1)
         && result[i].lastName === player.slice(2)) {
-          if (result[i].team === team || (result[i].team === 'JAC' && team === 'JAX')) {
+          if (result[i].team === team || (result[i].team === 'JAC' && team === 'JAX') || (result[i].team === 'SD' && team === 'LAC') || (result[i].team === 'LA' && team === 'LAR')) {
             found = true;
             if (result[i].team === 'JAC') retVal.team_code = 'JAX';
+            else if (result[i].team === 'SD') retVal.team_code = 'LAC';
+            else if (result[i].team === 'LA') retVal.team_code = 'LAR';
             else retVal.team_code = team;
             retVal.player_name = player;
             retVal.player_name_full = result[i].fullName;
@@ -230,17 +244,25 @@ function getPlayerInfo(player, team, stats) {
           }
         }
       }
-      if (found) {
-        resolve(postPlayer(retVal));
-      } else {
-        resolve(postPlayer({
-          player_name: player,
-          stats: stats,
-          team_id: stats.team_id,
-        }))
+      if (found) resolve(postPlayer(retVal));
+      else {
+        retVal.player_name = player;
+        retVal.player_name_full = '';
+        retVal.jersey_number = 0;
+        retVal.height = 0;
+        retVal.weight = 0;
+        retVal.birthdate = 0;
+        retVal.college = 'unknown';
+        retVal.status = 'unknown';
+        retVal.position = 'unknown';
+        retVal.stats = stats;
+        retVal.team_id = stats.team_id;
+        resolve(postPlayer(retVal))
       }
     }).catch(err => {
-      console.log('player not found')
+      console.log(player + ' not found')
+      console.log(team)
+      console.log(stats)
     })
   })
 }
@@ -321,14 +343,8 @@ function patchPlayer(player, current) {
 
 //builds patch for team to the database
 function buildTeamPatch(team) {
-  let teamFinder;
-  if (team.teamCode === 'LA') {
-    teamFinder = 'LAR';
-  } else {
-    teamFinder = team.teamCode
-  }
   return new Promise(function (resolve, reject) {
-    knex('teams').where('team_code', '=', teamFinder).then(result => {
+    knex('teams').where('team_code', '=', team.teamCode).then(result => {
       if (Object.keys(result[0].stats).length === 0) {
         result[0].stats.record = {
           wins: 0,

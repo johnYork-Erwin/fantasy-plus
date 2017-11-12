@@ -41,7 +41,7 @@ class Team extends React.Component {
     } else if (this.state.position === 'QB'){
       playerCares = ['Name', 'Jersey Number', 'Fumbles', 'Int', 'Rush Attempts', 'Rush Yards', 'Pass Attempts', 'Pass Completions', 'Completion %', 'Pass Yards', 'Touchdowns', 'Total Points']
     }
-    let cares = ['Time Period', 'Location', 'Opponent', 'Result', 'Score', 'Rush Attempts', 'Rush Yards', 'Pass Attempts', 'Pass Percentage', 'Pass Yards', 'Total Yards'];
+    let cares = ['Time Period', 'Location', 'Opponent', 'Result', 'Score', 'Rush Attempts', 'Rush Yards', 'Pass Attempts', 'Pass Completions', 'Completion %', 'Pass Yards', 'Total Yards'];
     let team;
     this.getTeamInfo(this.props.match.params.id).then(results => {
       team = results;
@@ -89,7 +89,7 @@ class Team extends React.Component {
         data = info.rushYards;
         break;
       case 'Pass Targets':
-        data = info.passAttempts;
+        data = info.recTargets;
         break;
       case 'Pass Receptions':
         data = info.rec;
@@ -180,7 +180,10 @@ class Team extends React.Component {
       case 'Pass Attempts':
         data = game.passing.attempts;
         break;
-      case 'Pass Percentage':
+      case 'Pass Completions':
+        data = game.passing.completions;
+        break;
+      case 'Completion %':
         data = (game.passing.completions/game.passing.attempts*100).toFixed(1) + '%'
         break;
       case 'Pass Yards':
@@ -205,7 +208,6 @@ class Team extends React.Component {
       this.setState({
         teamPlayers: result.data,
       })
-      console.log(this.state)
     }).catch(err => console.log(err))
   }
 
@@ -249,7 +251,7 @@ class Team extends React.Component {
             <h1>{this.state.teamData.team_name} / {this.state.teamData.team_code} </h1>
             <h3>({this.state.teamData.stats.record.wins} - {this.state.teamData.stats.record.losses} - {this.state.teamData.stats.record.ties}) = (Wins - Losses - Draws) </h3>
             <div>
-              <h4>Games Played</h4>
+              <h4 className="noMargins">Games Played</h4>
               <Table id="teamRecord">
                 <thead>
                   <tr>
@@ -288,7 +290,6 @@ class Team extends React.Component {
                 </thead>
                   <tbody>
                     {this.state.teamPlayers.map(function(player, index) {
-                      console.log(player)
                       return <tr key={index}>
                         {self.state.playerCares.map(function(care, index) {
                           return self.formatPlayerForTable(care, player, index)

@@ -34,6 +34,7 @@ class Splash extends React.Component {
     e.preventDefault();
     if (this.state.playerSearch) {
       axios.get(`/players/${this.state.playerSearch.trim()}`).then(results => {
+        console.log(results);
         if (results.data !== 'player not found') {
           this.setState({
             playerFound: results.data,
