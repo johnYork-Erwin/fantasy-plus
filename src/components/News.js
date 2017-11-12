@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Slider from 'react-slick'
 
 class News extends React.Component {
   componentWillMount() {
@@ -13,6 +14,14 @@ class News extends React.Component {
   }
 
   render() {
+    var settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
+    console.log(Slider)
     return (
       <div className="center">
         <h3 className="center">Recent Football News</h3>
@@ -26,6 +35,11 @@ class News extends React.Component {
             <button onClick={() => {window.location.href="http://www.nfl.com/news/story/0ap3000000875015/article/jameis-winston-fined-12k-for-poking-lattimore"}}>Link to article</button>
           </div>
         }
+        <Slider {...settings}>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+        </Slider>
         <h6>News provided by newsapi.org</h6>
       </div>
     )

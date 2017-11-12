@@ -112,7 +112,7 @@ class App extends Component {
             {this.state.loggedIn &&
               <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
             }
-            <button onClick={() => this.testing()}> TESTING </button>
+            {/* <button onClick={() => this.testing()}> TESTING </button> */}
             <div className='main' style={divStyle}>
               <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
               <Route path='/player/:id' render={(props) => <Player {...props} />}/>
