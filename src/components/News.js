@@ -35,11 +35,11 @@ class News extends React.Component {
             <button onClick={() => {window.location.href="http://www.nfl.com/news/story/0ap3000000875015/article/jameis-winston-fined-12k-for-poking-lattimore"}}>Link to article</button>
           </div>
         }
-        <Slider {...settings}>
+        {/* <Slider {...settings}>
           <div>1</div>
           <div>2</div>
           <div>3</div>
-        </Slider>
+        </Slider> */}
         <h6>News provided by newsapi.org</h6>
       </div>
     )
