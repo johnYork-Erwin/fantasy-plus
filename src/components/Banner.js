@@ -77,7 +77,10 @@ class Banner extends React.Component {
   render() {
     return (
       <header className='banner'>
-        <h1> Welcome {this.props.loggedIn ? this.props.userInfo.username: ''} to Fantasy Plus! </h1>
+        {this.props.loggedIn ?
+          <h1> Welcome {this.props.userInfo.username}, to Fantasy Plus </h1> :
+          <h1> Welcome to Fantasy Plus </h1>
+        }
         <button id='logIn' onClick={()=> {
             if (this.props.loggedIn) this.props.logOut();
             else this.openModal();

@@ -35,7 +35,6 @@ class Splash extends React.Component {
     e.preventDefault();
     if (this.state.playerSearch) {
       axios.get(`/players/${this.state.playerSearch.trim()}`).then(results => {
-        console.log(results);
         if (results.data !== 'player not found') {
           this.setState({
             playerFound: results.data,
@@ -102,7 +101,7 @@ class Splash extends React.Component {
       <div>
         {this.props.loggedIn &&
           <form onSubmit={this.handleSubmitSearch}>
-            <h2>Search for a player to add to your watch list!</h2>
+            <h2>Search for a player to add to your favorites!</h2>
             <label>
               Player Name :
             </label>
@@ -120,6 +119,9 @@ class Splash extends React.Component {
                 <th data-field='player_name_full'>Name</th>
                 <th data-field='team_code'>Team</th>
                 <th data-field='position'>Position</th>
+                <th>Touchdowns</th>
+                <th>Total Points</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -128,13 +130,16 @@ class Splash extends React.Component {
                   <td>{player.player_name_full}</td>
                   <td>{player.team_code}</td>
                   <td>{player.position}</td>
-                  <td><button onClick={() => self.addPlayerToUser(player)}>Add Player</button></td>
+                  <td>{player.stats.seasonStats.totalTd}</td>
+                  <td>{player.stats.seasonStats.totalPoints.toFixed(1)}</td>
+                  <td><button onClick={() => self.addPlayerToUser(player)}>Add To Favorites</button></td>
                 </tr>
               })}
             </tbody>
           </Table>
         </div>
         }
+        <h4>Leaderboard based on position.</h4>
         <div className="center">
           <label>
             Position:
@@ -154,17 +159,19 @@ class Splash extends React.Component {
               <th>Position</th>
               <th>Touchdowns</th>
               <th>Total Points</th>
+              <th>Action</th>
             </tr>
           </thead>
             <tbody>
               {this.state.leaders && this.state.leaders.map(function(player, index) {
                 if (self.props.loggedIn) {
                   return (<tr key={index}>
-                    <td><a onClick={self.handleClickName}>{player.player_name_full}</a></td>
+                    <td>{player.player_name_full}</td>
                     <td>{player.team_code}</td>
                     <td>{player.position}</td>
                     <td>{player.touchdowns}</td>
                     <td>{player.total_points}</td>
+                    <td><button onClick={self.handleClickName}>Add To Favorites</button></td>
                   </tr>)
                 } else {
                   return (<tr key={index}>
@@ -173,6 +180,7 @@ class Splash extends React.Component {
                     <td>{player.position}</td>
                     <td>{player.touchdowns}</td>
                     <td>{player.total_points}</td>
+                    <td>Log in first</td>
                   </tr>)
                 }
               })}

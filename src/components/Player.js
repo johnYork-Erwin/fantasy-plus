@@ -40,11 +40,11 @@ class Player extends React.Component {
       .then(result => {
         let cares;
         if (currentPlayer.position === 'WR' || currentPlayer.position === 'TE') {
-          cares = ['time period', 'targets', 'receptions', 'completion percentage', 'reception yards', 'reception TD', 'fumbles', 'points']
+          cares = ['Time Period', 'Targets', 'Receptions', 'Completion %', 'Reception Yards', 'Reception TD', 'Fumbles', 'Points']
         } else if (currentPlayer.position === 'RB') {
-          cares = ['time period', 'fumbles', 'receptions', 'reception yards', 'reception TD', 'rush attempts', 'rush yards', 'rush TD', 'points']
+          cares = ['Time Period', 'Fumbles', 'Receptions', 'Reception Yards', 'Reception TD', 'Rush Attempts', 'Rush Yards', 'Rush TD', 'Points']
         } else if (currentPlayer.position === 'QB') {
-          cares = ['time period', 'passes', 'passes completed', 'completion percentage', 'passing yards', 'pass TD', 'rush attempts', 'rush yards', 'rush TD', 'points']
+          cares = ['Time Period', 'Passes', 'Passes Completed', 'Completion %', 'Passing Yards', 'Pass TD', 'Rush Attempts', 'Rush Yards', 'Rush TD', 'Points']
         }
         this.setState({
           currentPlayer: currentPlayer,
@@ -80,7 +80,7 @@ class Player extends React.Component {
     }
     let data;
     switch(care){
-      case 'time period':
+      case 'Time Period':
         if (week === 'seasonStats') {
           let temp = 'Season';
           data = <Link to={`/teams/${this.state.currentPlayer.team_id}`}>{temp}</Link>
@@ -89,53 +89,53 @@ class Player extends React.Component {
           data = <Link to={`/playerGame/${this.state.currentPlayer.id}/${this.state.currentPlayer.team_id}/${week}`}>{temp}</Link>;
         }
         break;
-      case 'targets':
+      case 'Targets':
         data = playerGame.recTargets;
         break;
-      case 'receptions':
+      case 'Receptions':
         data = playerGame.rec;
         break;
-      case 'reception yards':
+      case 'Reception Yards':
         data = playerGame.recYards;
         break;
-      case 'reception TD':
+      case 'Reception TD':
         data = playerGame.recTd;
         break;
-      case 'fumbles':
+      case 'Fumbles':
         data = playerGame.fumbles;
         break;
-      case 'rush attempts':
+      case 'Rush attempts':
         data = playerGame.rushAttempts;
         break;
-      case 'rush yards':
+      case 'Rush yards':
         data = playerGame.rushYards;
         break;
-      case 'rush TD':
+      case 'Rush TD':
         data = playerGame.rushTd;
         break;
-      case 'points':
+      case 'Points':
         data = playerGame.totalPoints.toFixed(2);
         break;
-      case 'completion percentage':
+      case 'Completion %':
         if (playerGame.passYards === 0) {
           data = (playerGame.rec/(playerGame.recTargets)).toFixed(2);
         } else {
           data = (playerGame.passCompletions/(playerGame.passAttempts)).toFixed(2);
         }
         break;
-      case 'passes':
+      case 'Passes':
         data = playerGame.passAttempts;
         break;
-      case 'passes completed':
+      case 'Passes Completed':
         data = playerGame.passCompletions;
         break;
-      case 'passing yards':
+      case 'Passing Yards':
         data = playerGame.passYards;
         break;
-      case 'pass TD':
+      case 'Pass TD':
         data = playerGame.passTd;
         break;
-      case 'interceptions':
+      case 'Interceptions':
         data = playerGame.int;
         break;
       default:

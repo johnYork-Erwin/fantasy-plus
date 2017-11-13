@@ -8,7 +8,7 @@ import Player from './components/Player.js';
 import Team from './components/Team.js';
 import PlayerGame from './components/PlayerGame.js';
 import Banner from './components/Banner.js';
-import {ToastContainer, toast} from 'react-toastify'
+import {toast} from 'react-toastify'
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +25,6 @@ class App extends Component {
   }
 
   signUp(information) {
-    console.log(`reached signup with ${information}`);
     axios.post('/users', information)
       .then(response => {
         return this.logIn(information)
@@ -36,7 +35,6 @@ class App extends Component {
   }
 
   logIn(information) {
-    console.log('logging in');
     axios.post('/token', information)
       .then(response => {
         let object = {
@@ -68,11 +66,8 @@ class App extends Component {
   }
 
   update() {
-    console.log('updating')
     axios.get('/external').then(result => {
-      console.log(result)
     }).catch(err => {
-      console.log('error!')
     })
   }
 

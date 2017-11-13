@@ -15,7 +15,9 @@ form {
   padding-left: 20px;
   padding-right: 20px;
   background-color: blue;
+  color: white;
 }
+
 
 #PlayTypes {
   margin-top: 10px;
@@ -131,7 +133,6 @@ form {
 }
 
 .wrapper {
-  text-align: center;
   width: 100%;
   background-color: white;
   border-radius: 3px;
@@ -154,17 +155,15 @@ form {
 /*table section, commonality first */
 Table {
   border-collapse: collapse;
-  border-radius: 5px;
   display: block;
-  background-color: lightblue;
-  border-width: 200px;
+  background-color: white;
   border-color: black;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
 Table thead tr {
-  background-color: blue;
+  background-color: lightblue;
   border-color: black;
   border-width: 5px;
 }
@@ -191,7 +190,7 @@ Table a:hover {
 }
 
 Table tr:nth-child(2n) {
-  background-color: limegreen;
+  background-color: silver;
 }
 
 .tableContainer {
@@ -213,7 +212,7 @@ Table tr:nth-child(2n) {
 /*Table for playerGame*/
 #currentPlayer {
   border-radius: 10px;
-  background-color: pink;
+  background-color: green;
 }
 
 .holdPlays {

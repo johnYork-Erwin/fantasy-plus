@@ -26,9 +26,9 @@ class SideBar extends React.Component {
     const self = this;
     return (
       <div id='sideBar'>
-        <h3>Your Players</h3>
+        <h3>Favorites</h3>
         {this.props.userPlayers.map(function(player, index) {
-          return <p key={index}><Link to={`/player/${player.id}`} style={{color: 'black'}}>{player.player_name_full}</Link><button className="deletePlayer" onClick={() => self.removePlayer(player.id)}>X</button></p>
+          return <p key={index}><Link to={`/player/${player.id}`} style={{color: 'white'}}>{player.player_name_full}</Link><button className="deletePlayer" onClick={() => self.removePlayer(player.id)}>X</button></p>
         })}
       </div>
     )

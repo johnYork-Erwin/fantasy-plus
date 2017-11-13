@@ -14,56 +14,56 @@ class PlayerGame extends React.Component {
   formatForTable(player, care, index) {
     let data;
     switch(care){
-      case 'player name':
+      case 'Player Name':
         data = <Link to={`/player/${player.id}`}>{player.player_name_full}</Link>
         break;
-      case 'targets':
+      case 'Targets':
         data = player.stats.games[this.state.currentWeek].recTargets;
         break;
-      case 'receptions':
+      case 'Receptions':
         data = player.stats.games[this.state.currentWeek].rec;
         break;
-      case 'reception yards':
+      case 'Reception Yards':
         data = player.stats.games[this.state.currentWeek].recYards;
         break;
-      case 'reception TDs':
+      case 'Reception TDs':
         data = player.stats.games[this.state.currentWeek].recTd;
         break;
-      case 'fumbles':
+      case 'Fumbles':
         data = player.stats.games[this.state.currentWeek].fumbles;
         break;
-      case 'rush attempts':
+      case 'Rush Attempts':
         data = player.stats.games[this.state.currentWeek].rushAttempts;
         break;
-      case 'rush yards':
+      case 'Rush Yards':
         data = player.stats.games[this.state.currentWeek].rushYards;
         break;
-      case 'rush TD':
+      case 'Rush TD':
         data = player.stats.games[this.state.currentWeek].rushTd;
         break;
-      case 'total points':
+      case 'Total Points':
         data = player.stats.games[this.state.currentWeek].totalPoints.toFixed(2);
         break;
-      case 'completion percentage':
+      case 'Completion %':
         if (player.stats.games[this.state.currentWeek].passYards === 0) {
           data = (player.stats.games[this.state.currentWeek].rec/(player.stats.games[this.state.currentWeek].recTargets)).toFixed(2);
         } else {
           data = (player.stats.games[this.state.currentWeek].passCompletions/(player.stats.games[this.state.currentWeek].passAttempts)).toFixed(2);
         }
         break;
-      case 'pass attempts':
+      case 'Pass Attempts':
         data = player.stats.games[this.state.currentWeek].passAttempts;
         break;
-      case 'pass completions':
+      case 'Pass Completions':
         data = player.stats.games[this.state.currentWeek].passCompletions;
         break;
-      case 'pass yards':
+      case 'Pass Yards':
         data = player.stats.games[this.state.currentWeek].passYards;
         break;
-      case 'pass TDs':
+      case 'Pass TDs':
         data = player.stats.games[this.state.currentWeek].passTd;
         break;
-      case 'ints':
+      case 'Ints':
         data = player.stats.games[this.state.currentWeek].int;
         break;
       default:
@@ -87,11 +87,11 @@ class PlayerGame extends React.Component {
         currentPlayer = result.data[0];
         let array;
         if (currentPlayer.position === 'WR' || currentPlayer.position === 'TE') {
-          array = ['player name', 'fumbles', 'targets', 'receptions', 'reception yards', 'reception TDs', 'total points'];
+          array = ['Player Name', 'Fumbles', 'Targets', 'Receptions', 'Reception Yards', 'Reception TDs', 'Total Points'];
         } else if (currentPlayer.position === 'RB') {
-          array = ['player name', 'fumbles', 'targets', 'receptions', 'reception yards', 'reception TDs', 'rush attempts', 'rush yards', 'rush TDs', 'total points']
+          array = ['Player Name', 'Fumbles', 'Targets', 'Receptions', 'Reception Yards', 'Reception TDs', 'Rush Attempts', 'Rush Yards', 'Rush TDs', 'Total Points']
         } else if (currentPlayer.position === 'QB') {
-          array = ['player name', 'fumbles', 'ints', 'rush attempts', 'rush yards', 'rush TDs', 'pass attempts', 'pass completions', 'pass yards', 'pass TDs', 'total points']
+          array = ['Player Name', 'Fumbles', 'Ints', 'Rush Attempts', 'Rush Yards', 'Rush TDs', 'Pass Attempts', 'Pass Completions', 'Pass Yards', 'Pass TDs', 'Total Points']
         }
         cares = cares.concat(array);
       })
@@ -134,8 +134,8 @@ class PlayerGame extends React.Component {
       <div>
         {this.state &&
         <div className="wrapper">
-          <h1 className="center">{this.state.currentPlayer.player_name_full} Week {this.state.currentWeek}, {this.state.currentTeam.stats.games[this.state.currentWeek].home ? 'Home': 'Away'} </h1>
-          <h2 className="center"><Link to={`/teams/${this.state.currentTeam.id}`}>{this.state.currentTeam.team_code}</Link> vs. <Link to={`/teams/${this.state.oppTeam.id}`}>{this.state.oppTeam.team_code}</Link> ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
+          <h1>{this.state.currentPlayer.player_name_full} Week {this.state.currentWeek}, {this.state.currentTeam.stats.games[this.state.currentWeek].home ? 'Home': 'Away'} </h1>
+          <h2><Link to={`/teams/${this.state.currentTeam.id}`}>{this.state.currentTeam.team_code}</Link> vs. <Link to={`/teams/${this.state.oppTeam.id}`}>{this.state.oppTeam.team_code}</Link> ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
           <div className="holdPlays">
             <h2>Plays This Game Involving {this.state.currentPlayer.player_name_full}</h2>
             {this.state.currentPlayer.stats.games[this.state.currentWeek].plays.map(function(play, index) {
