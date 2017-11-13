@@ -8,7 +8,9 @@ const customStyles = {
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    width: '500px',
+    height: '200px',
   }
 };
 
@@ -85,19 +87,25 @@ class Banner extends React.Component {
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Modal">
-          <h2 ref={subtitle => this.subtitle = subtitle}>Log In</h2>
+          <h2 className="title" ref={subtitle => this.subtitle = subtitle}>Log In</h2>
           <form id="logInForm" name="form">
-            <label>
-              Username:
-            </label>
-            <input type="text" name="username" value={this.state.username} placeholder="username" onChange={this.handleChange}/>
-            <label>
-              Password:
-            </label>
-            <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
-            <button onClick={this.closeModal}>Cancel</button>
-            <button onClick={() => this.validate('logIn')} label="Log In">Log In</button>
-            <button onClick={() => this.validate('signUp')}>Sign Up</button>
+            <div className="userName">
+              <label>
+                Username:
+              </label>
+              <input type="text" name="username" value={this.state.username} placeholder="username" onChange={this.handleChange}/>
+            </div>
+            <div className="passWord">
+              <label>
+                Password:
+              </label>
+              <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
+            </div>
+            <div className="modalButtons">
+              <button onClick={this.closeModal}>Cancel</button>
+              <button onClick={() => this.validate('logIn')} label="Log In">Log In</button>
+              <button onClick={() => this.validate('signUp')}>Sign Up</button>
+            </div>
           </form>
         </Modal>
       </header>

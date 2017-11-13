@@ -74,7 +74,7 @@ class Team extends React.Component {
     let info = player.stats.seasonStats
     switch (care) {
       case 'Name':
-        data = player.player_name_full;
+        data = <Link to={`/player/${player.id}`}>{player.player_name_full}</Link>;
         break;
       case 'Fumbles':
         data = info.fumbles;
@@ -127,7 +127,7 @@ class Team extends React.Component {
       default:
         break;
     }
-    return <td key={index}>{data}</td>
+    return <td className="center" key={index}>{data}</td>
   }
 
   getTeamId(code) {

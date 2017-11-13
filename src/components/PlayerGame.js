@@ -15,7 +15,7 @@ class PlayerGame extends React.Component {
     let data;
     switch(care){
       case 'player name':
-        data = player.player_name_full;
+        data = <Link to={`/player/${player.id}`}>{player.player_name_full}</Link>
         break;
       case 'targets':
         data = player.stats.games[this.state.currentWeek].recTargets;
@@ -111,13 +111,18 @@ class PlayerGame extends React.Component {
         }
         playersAtPosition = array;
       })
-      .then(() => {
+      .then(result => {
+        return axios.get(`/teamsByCode/${currentTeam.stats.games[weekNumber].opp}`)
+      })
+      .then(result => {
+        console.log(result)
         this.setState({
           cares: cares,
           currentTeam: currentTeam,
           currentPlayer: currentPlayer,
           currentWeek: weekNumber,
           playersAtPosition: playersAtPosition,
+          oppTeam: result.data[0],
         })
       })
       .catch(err => console.log(err))
@@ -130,7 +135,7 @@ class PlayerGame extends React.Component {
         {this.state &&
         <div className="wrapper">
           <h1 className="center">{this.state.currentPlayer.player_name_full} Week {this.state.currentWeek}, {this.state.currentTeam.stats.games[this.state.currentWeek].home ? 'Home': 'Away'} </h1>
-          <h2 className="center"><Link to={`/teams/${this.state.currentTeam.id}`}>{this.state.currentTeam.team_code}</Link> vs. {this.state.currentTeam.stats.games[this.state.currentWeek].opp} ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
+          <h2 className="center"><Link to={`/teams/${this.state.currentTeam.id}`}>{this.state.currentTeam.team_code}</Link> vs. <Link to={`/teams/${this.state.oppTeam.id}`}>{this.state.oppTeam.team_code}</Link> ( {this.state.currentTeam.stats.games[this.state.currentWeek].result} {this.state.currentTeam.stats.games[this.state.currentWeek].score} - {this.state.currentTeam.stats.games[this.state.currentWeek].oppScore} )</h2>
           <div className="holdPlays">
             <h2>Plays This Game Involving {this.state.currentPlayer.player_name_full}</h2>
             {this.state.currentPlayer.stats.games[this.state.currentWeek].plays.map(function(play, index) {

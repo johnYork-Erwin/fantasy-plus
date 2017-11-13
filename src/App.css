@@ -4,6 +4,7 @@
   width: 100%;
 }
 
+
 form {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -71,6 +72,49 @@ form {
   margin-left: 10px;
   margin-right: 10px;
   text-align: center;
+}
+
+/*MODAL!*/
+.title {
+  text-align: center;
+}
+
+.userName {
+  display: table;
+  margin: 0 auto;
+  margin-top: 5px;
+}
+
+.passWord {
+  display: table;
+  margin: 0 auto;
+  margin-top: 5px;
+}
+
+.modalButtons {
+  display: table;
+  margin: 0 auto;
+}
+
+.modalButtons button {
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+/*NEWS!*/
+#navButtons button {
+  margin-left: 1px;
+  margin-right: 1px;
+  display: inline-block;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 5px;
+  margin-top: 3px;
+}
+
+#pagination {
+  font-size: 10px;
 }
 
 .center {
@@ -223,6 +267,12 @@ Table tr:nth-child(2n) {
   grid-column: 12/14;
   height: 30px;
   border-radius: 5px;
+}
+
+#login {
+  display: grid;
+  grid-template-columns: repeat(1fr, 5);
+  grid-template-rows: repeat(1fr, 4);
 }
 
 #logIn {

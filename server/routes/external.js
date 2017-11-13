@@ -64,13 +64,12 @@ router.get('/external', (req, res, next) => {
     console.log('db is current through week ' + result)
     return getReal();
   }).then(result => {
+    console.log('reality is through week ' + result);
     let array = [];
     for (let i = upToDateThrough+1; i < result; i++) {
-      array.push(update(i));
-      upToDateThrough = i;
+      array.push(i);
     }
-    console.log('reality is through week ' + result);
-    return Promise.all(array);
+    return finishWeeks(array)
   }).then(result => {
     let obj = {upToDateThrough: upToDateThrough}
     console.log('finished updating all the weeks!');
@@ -79,6 +78,18 @@ router.get('/external', (req, res, next) => {
     res.send('successfully updated our DB!')
   }).catch(err => next(err))
 })
+
+async function finishWeeks(weeksArray) {
+  let finishedWeeks = [];
+  while (weeksArray.length !== 0) {
+    console.log(`starting week ${weeksArray[0]}`)
+    let week = weeksArray.splice(0,1);
+    let temp = await update(week)
+    console.log();
+    finishedWeeks = finishedWeeks.concat([temp])
+  }
+  return finishedWeeks
+}
 
 function update(weekToUpdate) {
   return new Promise(function (resolve, reject) {
@@ -121,7 +132,7 @@ function update(weekToUpdate) {
         array.push(Promise.all(newArray));
       }
       return Promise.all(array);
-
+      console.log('finished teams for week' + weekToUpdate);
       //switching to work on players
     }).then(results => {
       let playersArray = [];
@@ -135,7 +146,8 @@ function update(weekToUpdate) {
     }).then(playersArray => {
       return finishPlayers(playersArray)
     }).then(result => {
-      console.log('successfully updated one week!');
+      console.log('successfully updated one week! ---- ' + weekToUpdate);
+      resolve('success')
     }).catch(err => reject(err))
   })
 }

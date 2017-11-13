@@ -82,9 +82,11 @@ class Player extends React.Component {
     switch(care){
       case 'time period':
         if (week === 'seasonStats') {
-          data = 'Season';
+          let temp = 'Season';
+          data = <Link to={`/teams/${this.state.currentPlayer.team_id}`}>{temp}</Link>
         } else {
-          data = 'Week ' + week;
+          let temp = 'Week ' + week;
+          data = <Link to={`/playerGame/${this.state.currentPlayer.id}/${this.state.currentPlayer.team_id}/${week}`}>{temp}</Link>;
         }
         break;
       case 'targets':
@@ -164,8 +166,7 @@ class Player extends React.Component {
             </thead>
             <tbody>
               {Object.keys(this.state.currentPlayer.stats.games).map(function(week, index) {
-                return <tr onClick={() => self.props.history.push(`/playerGame/${self.state.currentPlayer.id}/${self.state.currentPlayer.team_id}/${week}`)}
-                    key={index}>{self.state.cares.map(function(care, index) {
+                return <tr key={index}>{self.state.cares.map(function(care, index) {
                   return self.formattingForTable(week, care, index)
                 })}
               </tr>
