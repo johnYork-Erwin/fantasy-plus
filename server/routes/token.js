@@ -14,29 +14,26 @@ router.post('/token', (req, res, next) => {
   knex('users').where('username', username).first()
     .then((row) => {
       if (!row) {
-        throw boom.create(400, 'Username is not registered');
+        res.status(400).send('Username is not registered');
       }
       user = row;
       return bcrypt.compare(password, user.hash_pass)
     })
     .then(() => {
       const claim = { userId: user.id };
-      console.log('compared and passed the passord compare')
       const token = jwt.sign(claim, process.env.JWT_KEY, {
         expiresIn: '7 days'
       })
-      console.log('we signed it successfully!')
       res.cookie('token', token, {
         httpOnly: true,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
         secure: router.get('env') === 'production'
       });
-      console.log('created cookie successfully')
       delete user.hash_pass;
       res.send(user)
     })
     .catch(bcrypt.MISMATCH_ERROR, () => {
-      throw boom.create(400, 'Bad username or password');
+      res.status(400).send('Username and Password do not match');
     })
 })
 

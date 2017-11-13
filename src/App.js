@@ -8,6 +8,7 @@ import Player from './components/Player.js';
 import Team from './components/Team.js';
 import PlayerGame from './components/PlayerGame.js';
 import Banner from './components/Banner.js';
+import {ToastContainer, toast} from 'react-toastify'
 
 class App extends Component {
   constructor(props) {
@@ -21,22 +22,21 @@ class App extends Component {
     this.update = this.update.bind(this);
     this.logOut = this.logOut.bind(this);
     this.getPlayers = this.getPlayers.bind(this);
-    this.testing = this.testing.bind(this)
   }
 
   signUp(information) {
     console.log(`reached signup with ${information}`);
     axios.post('/users', information)
       .then(response => {
-        console.log('posted to users successfully now trying to get a token')
         return this.logIn(information)
       }).then(response => {
-        console.log('signed up successfully!');
+        toast.success('signed up successfully');
       })
-      .catch(err => console.log('sign up failed'))
+      .catch(err => toast.error('username already in use'))
   }
 
   logIn(information) {
+    console.log('logging in');
     axios.post('/token', information)
       .then(response => {
         let object = {
@@ -46,7 +46,10 @@ class App extends Component {
           loggedIn: true,
           userInfo: object,
         })
-      }).catch(err => console.log('could not get you a token'))
+        toast.success('logged you in')
+      }).catch(err => {
+        toast.error(err.response.data)
+      })
   }
 
   logOut() {
@@ -55,8 +58,13 @@ class App extends Component {
         loggedIn: false,
         userInfo: {},
       })
+      toast.success('logged out')
       window.location.href = '/'
-    }).catch(err => console.log('could not log out'));
+    }).catch(err => toast.error(err.response.data));
+  }
+
+  componentDidMount() {
+    this.update();
   }
 
   update() {
@@ -90,13 +98,6 @@ class App extends Component {
     }
   }
 
-  testing() {
-    console.log('testing')
-    axios.get('/externalies').then(results => {
-      console.log(results)
-    }).catch(err => console.log(err))
-  }
-
   render() {
     const divStyle = {
       gridColumn: '1/11'
@@ -112,7 +113,6 @@ class App extends Component {
             {this.state.loggedIn &&
               <SideBar getPlayers={this.getPlayers} userPlayers={this.state.userPlayers} userInfo={this.state.userInfo} loggedIn={this.state.loggedIn}/>
             }
-            {/* <button onClick={() => this.testing()}> TESTING </button> */}
             <div className='main' style={divStyle}>
               <Route exact path='/' render={(props) => <Splash {...props} getPlayers={this.getPlayers} loggedIn={this.state.loggedIn} userInfo={this.state.userInfo}/>}/>
               <Route path='/player/:id' render={(props) => <Player {...props} />}/>

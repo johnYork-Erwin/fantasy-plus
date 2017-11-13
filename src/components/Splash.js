@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {Table} from 'react-materialize'
 import News from './News.js'
+import {toast} from 'react-toastify'
 
 class Splash extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class Splash extends React.Component {
     this.state = {
       playerSearch: '',
       userId: this.props.userInfo.id,
-      userName: this.props.userInfo.username,
+      loggedIn: this.props.loggedIn,
       position: 'QB',
     }
     this.addPlayerToUser = this.addPlayerToUser.bind(this);
@@ -40,7 +41,7 @@ class Splash extends React.Component {
             playerFound: results.data,
           })
         }
-      }).catch(err => console.log(err))
+      }).catch(err => toast.warn(err.response.data))
     }
   }
 
@@ -157,13 +158,23 @@ class Splash extends React.Component {
           </thead>
             <tbody>
               {this.state.leaders && this.state.leaders.map(function(player, index) {
-                return (<tr key={index}>
-                  <td><a onClick={self.handleClickName}>{player.player_name_full}</a></td>
-                  <td>{player.team_code}</td>
-                  <td>{player.position}</td>
-                  <td>{player.touchdowns}</td>
-                  <td>{player.total_points}</td>
-                </tr>)
+                if (self.props.loggedIn) {
+                  return (<tr key={index}>
+                    <td><a onClick={self.handleClickName}>{player.player_name_full}</a></td>
+                    <td>{player.team_code}</td>
+                    <td>{player.position}</td>
+                    <td>{player.touchdowns}</td>
+                    <td>{player.total_points}</td>
+                  </tr>)
+                } else {
+                  return (<tr key={index}>
+                    <td>{player.player_name_full}</td>
+                    <td>{player.team_code}</td>
+                    <td>{player.position}</td>
+                    <td>{player.touchdowns}</td>
+                    <td>{player.total_points}</td>
+                  </tr>)
+                }
               })}
             </tbody>
         </Table>

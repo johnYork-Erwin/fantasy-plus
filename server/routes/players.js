@@ -10,7 +10,7 @@ router.get('/players/:playerName', (req, res, next) => {
   knex('players').where('player_name_full', 'ilike', string)
     .then(results => {
       if (results.length === 0) {
-        res.send('player not found')
+        res.status(400).send('No player names contain those letters...')
       } else {
         res.send(results)
       }

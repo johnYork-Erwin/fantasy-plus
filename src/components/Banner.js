@@ -1,5 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
+import 'react-toastify/dist/ReactToastify.min.css'
+import {ToastContainer, toast} from 'react-toastify'
 
 const customStyles = {
   content : {
@@ -30,7 +32,8 @@ class Banner extends React.Component {
     this.validate = this.validate.bind(this);
   }
 
-  validate(command) {
+  validate(command, e) {
+    e.preventDefault();
     if (this.state.username !== '' && this.state.password !== '') {
       let object = {
         username: this.state.username,
@@ -47,7 +50,7 @@ class Banner extends React.Component {
       })
       this.closeModal();
     } else {
-      console.log('not logging in because form is incomplete');
+      toast.error('The form is incomplete...');
     }
   }
 
@@ -80,6 +83,14 @@ class Banner extends React.Component {
             else this.openModal();
           }}>{this.props.loggedIn ? 'Log Out': 'Log In'}</button>
         <button onClick={this.props.update} className='updateDB'>Update DB</button>
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover>
+        </ToastContainer>
         <Modal
           id="login"
           isOpen={this.state.modalIsOpen}
@@ -102,9 +113,9 @@ class Banner extends React.Component {
               <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
             </div>
             <div className="modalButtons">
-              <button onClick={this.closeModal}>Cancel</button>
-              <button onClick={() => this.validate('logIn')} label="Log In">Log In</button>
-              <button onClick={() => this.validate('signUp')}>Sign Up</button>
+              <button type='button' onClick={this.closeModal}>Cancel</button>
+              <button type='button' onClick={(e) => this.validate('logIn', e)} label="Log In">Log In</button>
+              <button type='button' onClick={(e) => this.validate('signUp', e)}>Sign Up</button>
             </div>
           </form>
         </Modal>

@@ -39,7 +39,6 @@ class News extends React.Component {
         newsPointer: index,
         news: results.data,
       })
-      console.log(this.state)
     }).catch(err => console.log(err))
   }
 
