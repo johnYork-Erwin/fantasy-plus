@@ -165,15 +165,15 @@ class PlayerGame extends React.Component {
           </div>
           <div id="PlayGameStats">
             <div className="leftHalf">
-              <h4>Score Throughout The Game</h4>
+              <h4>Percentage of Game Spent...</h4>
               <GameScript currentTeam={this.state.currentTeam} currentWeek={this.state.currentWeek} script={this.state.currentTeam.stats.games[this.state.currentWeek].gameScript}/>
             </div>
             <div className="rightHalf">
               <h4>Play Types Called</h4>
               <PlayTypes playTypesValue={this.state.currentWeek} playersTeam={this.state.currentTeam}/>
             </div>
-            <Link to="/"><button className="back">Back to Home</button></Link>
           </div>
+          <Link to="/" className="center"><button className="back">Back to Home</button></Link>
         </div>
         }
       </div>

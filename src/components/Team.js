@@ -301,6 +301,7 @@ class Team extends React.Component {
               <h3> Play Choices over the Season </h3>
               <PlayTypes playTypesValue='Season' playersTeam={this.state.teamData}/>
             </div>
+            <Link to="/" className="center"><button className="back">Back to Home</button></Link>
           </div>
         }
       </div>

@@ -98,7 +98,7 @@ class Splash extends React.Component {
   render() {
     const self = this;
     return (
-      <div className="main">
+      <div>
         {this.props.loggedIn &&
           <form onSubmit={this.handleSubmitSearch}>
             <h2>Search for a player to add to your watch list!</h2>

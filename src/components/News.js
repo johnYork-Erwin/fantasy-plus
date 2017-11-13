@@ -10,18 +10,19 @@ class News extends React.Component {
         newsPointer: index,
         news: results.data,
       })
+      console.log(this.state)
     }).catch(err => console.log(err))
   }
 
   render() {
-    var settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1
-    };
-    console.log(Slider)
+    // var settings = {
+    //   dots: true,
+    //   infinite: true,
+    //   speed: 500,
+    //   slidesToShow: 1,
+    //   slidesToScroll: 1
+    // };
+    const self = this;
     return (
       <div className="center">
         <h3 className="center">Recent Football News</h3>
@@ -32,7 +33,7 @@ class News extends React.Component {
             <h5>Published At: {this.state.news[this.state.newsPointer].publishedAt}</h5>
             <img alt='' className="newsImage" src={this.state.news[this.state.newsPointer].urlToImage}></img>
             <br></br>
-            <button onClick={() => {window.location.href="http://www.nfl.com/news/story/0ap3000000875015/article/jameis-winston-fined-12k-for-poking-lattimore"}}>Link to article</button>
+            <button onClick={() => window.open(self.state.news[self.state.newsPointer].url)}>Link to article</button>
           </div>
         }
         {/* <Slider {...settings}>

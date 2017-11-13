@@ -4,19 +4,19 @@ var d3 = require('d3');
 class GameScript extends React.Component {
   constructor(props) {
     super(props);
-    this.graph = this.graph.bind(this);
     this.cleanData = this.cleanData.bind(this)
+    this.createDonutChart = this.createDonutChart.bind(this)
   }
 
   componentDidMount() {
     let data = this.cleanData();
-    this.graph(data);
+    this.createDonutChart(data);
   }
 
   componentDidUpdate(nextProps) {
     if (this.props.currentTeam.id !== nextProps.currentTeam.id || this.props.currentWeek !== nextProps.currentWeek) {
       let data = this.cleanData();
-      this.graph(data);
+      this.createDonutChart(data);
     }
   }
 
@@ -38,79 +38,98 @@ class GameScript extends React.Component {
       }
     }
     if (!perspective) {
-      if (up15 !== 0) {
-        retVal.push({
-          key: 'down by 15',
-          value: up15,
-        })
-      }
-      if (down15 !== 0) {
-        retVal.push({
-          key: 'up by 15',
-          value: down15,
-        })
-      }
+      retVal.push({
+        name: 'up by 15',
+        count: down15,
+      })
+      retVal.push({
+        name: 'down by 15',
+        count: up15,
+      })
     } else {
-      if (up15 !== 0) {
-        retVal.push({
-          key: 'up by 15',
-          value: up15,
-        })
-      }
-      if (down15 !== 0) {
-        retVal.push({
-          key: 'down by 15',
-          value: down15,
-        })
-      }
+      retVal.push({
+        name: 'up by 15',
+        count: up15,
+      })
+      retVal.push({
+        name: 'down by 15',
+        count: down15,
+      })
     }
     retVal.push({
-      key: 'evenish',
-      value: evenish,
+      name: 'evenish',
+      count: evenish,
     })
     return retVal;
   }
 
-  graph(data) {
-    let clear = d3.select("#GameScript")
-    clear.selectAll("*").remove();
-    var svg = d3.select("#GameScript"),
-        width = svg.attr("width"),
-        height = svg.attr("height"),
-        radius = Math.min(width, height)/2 - 30;
-    var g = svg.append("g")
-       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
-    var pie = d3.pie().value(function(d) {
-          return d.value;
-        });
-    var path = d3.arc()
-       .outerRadius(radius - 10)
-       .innerRadius(0);
-    var label = d3.arc()
-        .outerRadius(radius)
-        .innerRadius(radius - 80);
-    var arc = g.selectAll(".arc")
-        .data(pie(data))
-        .enter().append("g")
-        .attr("class", "arc");
-    arc.append("path")
-        .attr("d", path)
-        .attr("fill", function(d) { return color(d.data.key); });
-    arc.append("text")
-        .attr("transform", function(d) {
-                 return "translate(" + label.centroid(d) + ")";
-         })
-        .text(function(d) { return d.data.key; });
-    svg.append("g")
-        .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
-        .append("text")
-        .attr("class", "title")
+  createDonutChart(data) {
+    let clear = d3.select('#GameScript')
+    clear.selectAll('*').remove()
+    var height = 300
+    var width = 300
+    var totalRadius = Math.min(width, height) / 2
+    var donutHoleRadius = totalRadius * 0.5
+    let array = [];
+    for (let key in data) {
+      array.push(data[key].name)
+    }
+    var color = d3.scaleOrdinal()
+      .domain(array)
+      .range(['green', 'red', 'blue'])
+
+
+    var svg = d3.select('#GameScript').append('svg').attr('width', width).attr('height', height)
+      .append('g')
+      .attr('transform', `translate(${width / 2}, ${height / 2})`)
+
+    var arc = d3.arc().innerRadius(totalRadius - donutHoleRadius).outerRadius(totalRadius)
+
+    var pie = d3.pie()
+      .value((d) => d.count)
+      .sort(null)
+
+    svg
+      .selectAll('path')
+      .data(pie(data))
+      .enter()
+      .append('path')
+      .attr('d', arc)
+      .attr('fill', (d, i) => color(d.data.name))
+
+    var legendItemSize = 18
+    var legendSpacing = 4
+
+    var legend = svg
+      .selectAll('.legend')
+      .data(color.domain())
+      .enter()
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', (d, i) => {
+        var height = legendItemSize + legendSpacing
+        var offset = height * color.domain().length / 2
+        var x = legendItemSize * -2;
+        var y = (i * height) - offset
+        return `translate(${x}, ${y})`
+      })
+
+    legend
+      .append('rect')
+      .attr('width', legendItemSize)
+      .attr('height', legendItemSize)
+      .style('fill', color);
+
+    legend
+      .append('text')
+      .attr('x', legendItemSize + legendSpacing)
+      .attr('y', legendItemSize - legendSpacing)
+      .text((d) => d)
   }
 
   render() {
     return (
-      <svg id="GameScript" width="300" height="300"> </svg>
+      <div id="GameScript"> </div>
 
     )
   }

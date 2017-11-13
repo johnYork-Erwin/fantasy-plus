@@ -23,15 +23,15 @@ class PlayTypes extends React.Component {
   createData() {
     const retVal = [];
     let passing = {}
-    passing.key = 'Passing';
+    passing.name = 'Passing';
     let rushing = {};
-    rushing.key = 'Rushing';
+    rushing.name = 'Rushing';
     if (this.props.playTypesValue === 'Season') {
-      rushing.value = this.props.playersTeam.stats.seasonStats.rushing.attempts;
-      passing.value = this.props.playersTeam.stats.seasonStats.passing.attempts;
+      rushing.count = this.props.playersTeam.stats.seasonStats.rushing.attempts;
+      passing.count = this.props.playersTeam.stats.seasonStats.passing.attempts;
     } else {
-      rushing.value = this.props.playersTeam.stats.games[this.props.playTypesValue].rushing.attempts;
-      passing.value = this.props.playersTeam.stats.games[this.props.playTypesValue].passing.attempts;
+      rushing.count = this.props.playersTeam.stats.games[this.props.playTypesValue].rushing.attempts;
+      passing.count = this.props.playersTeam.stats.games[this.props.playTypesValue].passing.attempts;
     }
     retVal.push(passing);
     retVal.push(rushing);
@@ -40,54 +40,71 @@ class PlayTypes extends React.Component {
 
   graph(data) {
     let clear = d3.select('#PlayTypes')
-    clear.selectAll("*").remove();
-    var svg = d3.select("#PlayTypes"),
-        width = svg.attr("width"),
-        height = svg.attr("height"),
-        radius = Math.min(width, height)/2 - 20;
-
-    var g = svg.append("g")
-       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
-
-    var pie = d3.pie().value(function(d) {
-          return d.value;
-        });
-
-    var path = d3.arc()
-       .outerRadius(radius - 10)
-       .innerRadius(0);
-
-    var label = d3.arc()
-        .outerRadius(radius)
-        .innerRadius(radius - 80);
-
-    var arc = g.selectAll(".arc")
-        .data(pie(data))
-        .enter().append("g")
-        .attr("class", "arc");
-
-    arc.append("path")
-        .attr("d", path)
-        .attr("fill", function(d) { return color(d.data.key); });
-
-    arc.append("text")
-        .attr("transform", function(d) {
-                 return "translate(" + label.centroid(d) + ")";
-         })
-        .text(function(d) { return d.data.key; });
+    clear.selectAll('*').remove()
+    var height = 300
+    var width = 300
+    var totalRadius = Math.min(width, height) / 2
+    var donutHoleRadius = totalRadius * 0.5
+    let array = [];
+    for (let key in data) {
+      array.push(data[key].name)
+    }
+    var color = d3.scaleOrdinal()
+      .domain(array)
+      .range(['purple', 'green'])
 
 
-    svg.append("g")
-        .attr("transform", "translate(" + (width / 2 - 120) + "," + 20 + ")")
-        .append("text")
-        .attr("class", "title")
+    var svg = d3.select('#PlayTypes').append('svg').attr('width', width).attr('height', height)
+      .append('g')
+      .attr('transform', `translate(${width / 2}, ${height / 2})`)
+
+    var arc = d3.arc().innerRadius(totalRadius - donutHoleRadius).outerRadius(totalRadius)
+
+    var pie = d3.pie()
+      .value((d) => d.count)
+      .sort(null)
+
+    svg
+      .selectAll('path')
+      .data(pie(data))
+      .enter()
+      .append('path')
+      .attr('d', arc)
+      .attr('fill', (d, i) => color(d.data.name))
+
+    var legendItemSize = 18
+    var legendSpacing = 4
+
+    var legend = svg
+      .selectAll('.legend')
+      .data(color.domain())
+      .enter()
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', (d, i) => {
+        var height = legendItemSize + legendSpacing
+        var offset = height * color.domain().length / 2
+        var x = legendItemSize * -2;
+        var y = (i * height) - offset
+        return `translate(${x}, ${y})`
+      })
+
+    legend
+      .append('rect')
+      .attr('width', legendItemSize)
+      .attr('height', legendItemSize)
+      .style('fill', color);
+
+    legend
+      .append('text')
+      .attr('x', legendItemSize + legendSpacing)
+      .attr('y', legendItemSize - legendSpacing)
+      .text((d) => d)
   }
 
   render() {
     return (
-      <svg id="PlayTypes" width="300" height="300"> </svg>
+      <div id="PlayTypes"> </div>
     )
   }
 }

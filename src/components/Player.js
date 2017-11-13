@@ -23,8 +23,10 @@ class Player extends React.Component {
     this.getPlayer();
   }
 
-  componentWillUpdate() {
-    this.getPlayer();
+  componentDidUpdate(nextProps) {
+    if (this.props.match.params.id !== nextProps.match.params.id) {
+      this.getPlayer();
+    }
   }
 
   getPlayer() {
@@ -147,7 +149,7 @@ class Player extends React.Component {
         {this.state.cares &&
         <div className="wrapper">
           <h1>{this.state.currentPlayer.player_name_full} / {this.state.currentPlayer.position} / {this.state.currentPlayer.status}</h1>
-          <p>Team: {this.state.currentPlayer.team_code}, Jersey Number: {this.state.currentPlayer.jersey_number}, College: {this.state.currentPlayer.college} </p>
+          <p>Team: <Link to={`/teams/${this.state.playersTeam.id}`}>{this.state.playersTeam.team_code}</Link>, Jersey Number: {this.state.currentPlayer.jersey_number}, College: {this.state.currentPlayer.college} </p>
           <p>Height: {Math.round(this.state.currentPlayer.height/12)}'{this.state.currentPlayer.height%12}'', Weight: {this.state.currentPlayer.weight}lbs, Birthdate: {this.state.currentPlayer.birthdate}</p>
           <h3 className="center">Weekly Stats</h3>
           <Table id="record">
@@ -187,7 +189,7 @@ class Player extends React.Component {
             })}
           </select>
           <PlayTypes playTypesValue={this.state.playTypesValue} playersTeam={this.state.playersTeam}/>
-          <Link to="/"><button className="back">Back to Home</button></Link>
+          <Link to="/" className="center"><button className="back">Back to Home</button></Link>
         </div>
         }
       </div>
