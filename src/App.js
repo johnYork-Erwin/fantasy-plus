@@ -14,7 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedIn: false,
+      loggedIn: true,
       userInfo: {},
       userPlayers: [],
     }
@@ -102,7 +102,7 @@ class App extends Component {
     }
     return (
       <Router>
-        <div className='background'>
+        <div>
           <Banner loggedIn={this.state.loggedIn} update={this.update} logOut={this.logOut} signUp={this.signUp} logIn={this.logIn} userInfo={this.state.userInfo}/>
           <div className='container'>
             {this.state.loggedIn &&

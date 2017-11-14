@@ -34,7 +34,7 @@ class Banner extends React.Component {
   }
 
   validate(command, e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (this.state.username !== '' && this.state.password !== '') {
       let object = {
         username: this.state.username,
@@ -102,7 +102,8 @@ class Banner extends React.Component {
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={customStyles}
-          contentLabel="Modal">
+          contentLabel="Modal"
+          onSubmit={() => this.validate('logIn')}>
           <h2 className="title" ref={subtitle => this.subtitle = subtitle}>Log In</h2>
           <form id="logInForm" name="form">
             <div className="userName">
@@ -119,7 +120,7 @@ class Banner extends React.Component {
             </div>
             <div className="modalButtons">
               <button type='button' onClick={this.closeModal}>Cancel</button>
-              <button type='button' onClick={(e) => this.validate('logIn', e)} label="Log In">Log In</button>
+              <button type='submit' onClick={(e) => this.validate('logIn', e)} label="Log In">Log In</button>
               <button type='button' onClick={(e) => this.validate('signUp', e)}>Sign Up</button>
             </div>
           </form>
