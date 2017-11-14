@@ -33,7 +33,7 @@ form {
   grid-column: 1;
   padding-left: 20px;
   padding-right: 20px;
-  background-color: blue;
+  background-color: lightblue;
   color: white;
   margin-left: 0px;
   margin-bottom: 0px;
@@ -48,7 +48,7 @@ form {
   padding-top: 15px;
   padding-bottom: 15px;
   margin-top: 0px;
-  background-color: darkblue;
+  background-color: steelblue;
   text-align: center;
 }
 
@@ -58,7 +58,7 @@ form {
   margin-top: 0px;
   text-align: center;
   text-decoration: none;
-  color: white;
+  color: black;
 }
 
 .newsHolder {
@@ -192,7 +192,7 @@ form {
 Table {
   border-collapse: collapse;
   display: block;
-  background-color: white;
+  background-color: whitesmoke;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -292,7 +292,7 @@ Table th:last-child {
 /*Table for playerGame*/
 #currentPlayer {
   border-radius: 10px;
-  background-color: green;
+  background-color: #FFFF00;
 }
 
 .holdPlays {
@@ -302,6 +302,11 @@ Table th:last-child {
   width: 90%;
   background-color: silver;
   border-radius: 5px;
+}
+
+.holdPlays h5 {
+  text-align: left;
+  padding-left: 50px
 }
 
 .noMargins {

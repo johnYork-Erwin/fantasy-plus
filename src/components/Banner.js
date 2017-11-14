@@ -102,10 +102,9 @@ class Banner extends React.Component {
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           style={customStyles}
-          contentLabel="Modal"
-          onSubmit={() => this.validate('logIn')}>
+          contentLabel="Modal">
           <h2 className="title" ref={subtitle => this.subtitle = subtitle}>Log In</h2>
-          <form id="logInForm" name="form">
+          <form id="logInForm" name="form" onSubmit={() => this.validate('logIn')}>
             <div className="userName">
               <label>
                 Username:

@@ -29,7 +29,7 @@ class SideBar extends React.Component {
         <h3 id='sideBarTitle'>Favorites</h3>
         <div>
           {this.props.userPlayers.map(function(player, index) {
-            return <p key={index}><Link to={`/player/${player.id}`} style={{color: 'white'}}>{player.player_name_full}</Link><button className="deletePlayer" onClick={() => self.removePlayer(player.id)}>X</button></p>
+            return <p key={index}><Link to={`/player/${player.id}`} style={{color: 'black'}}>{player.player_name_full}</Link><button className="deletePlayer" onClick={() => self.removePlayer(player.id)}>X</button></p>
           })}
         </div>
       </div>
