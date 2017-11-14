@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.min.css'
 import {ToastContainer, toast} from 'react-toastify'
+import {Link} from 'react-router-dom'
 
 const customStyles = {
   content : {
@@ -77,15 +78,16 @@ class Banner extends React.Component {
   render() {
     return (
       <header className='banner'>
-        {this.props.loggedIn ?
-          <h1> Welcome {this.props.userInfo.username}, to Fantasy Plus </h1> :
-          <h1> Welcome to Fantasy Plus </h1>
-        }
-        <button id='logIn' onClick={()=> {
+        <div className="flexbox">
+          <h1><Link to={'/'}>Fantasy Plus</Link></h1>
+          {this.props.loggedIn &&
+            <h1>Welcome {this.props.userInfo.username}</h1>
+            }
+          <button id='logIn' onClick={()=> {
             if (this.props.loggedIn) this.props.logOut();
             else this.openModal();
           }}>{this.props.loggedIn ? 'Log Out': 'Log In'}</button>
-        <button onClick={this.props.update} className='updateDB'>Update DB</button>
+        </div>
         <ToastContainer
           position="top-center"
           autoClose={5000}
@@ -113,7 +115,7 @@ class Banner extends React.Component {
               <label>
                 Password:
               </label>
-              <input type="text" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
+              <input type="password" name="password" value={this.state.password} placeholder="password" onChange={this.handleChange}/>
             </div>
             <div className="modalButtons">
               <button type='button' onClick={this.closeModal}>Cancel</button>

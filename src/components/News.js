@@ -51,11 +51,11 @@ class News extends React.Component {
         <h3 className="center">Recent Football News</h3>
         {this.state &&
           <div className="newsHolder">
-            <h2>{this.state.news[this.state.newsPointer].title}</h2>
+            {/* <p>{this.state.news[this.state.newsPointer].title}</p> */}
+            <a  onClick={() => window.open(self.state.news[self.state.newsPointer].url)}>{this.state.news[this.state.newsPointer].title}</a>
+            {/* <button onClick={() => window.open(self.state.news[self.state.newsPointer].url)}>Link to article</button> */}
             <h5>Author: {this.state.news[this.state.newsPointer].author || 'Various'}</h5>
             <img alt='' className="newsImage" src={this.state.news[this.state.newsPointer].urlToImage}></img>
-            <br></br>
-            <button onClick={() => window.open(self.state.news[self.state.newsPointer].url)}>Link to article</button>
             <div id="navButtons">
               <button onClick={this.left}>{left}</button>
               <button onClick={this.right}>{right}</button>

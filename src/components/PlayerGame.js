@@ -178,7 +178,6 @@ class PlayerGame extends React.Component {
               <PlayTypes playTypesValue={this.state.currentWeek} playersTeam={this.state.currentTeam}/>
             </div>
           </div>
-          <Link to="/" className="center"><button className="back">Back to Home</button></Link>
         </div>
         }
       </div>

@@ -69,7 +69,7 @@ class Splash extends React.Component {
     if (this.props.loggedIn) {
       let id;
       let target = this.state.leaders.filter(function(player) {
-        if (player.player_name_full === e.target.text) return player
+        if (player.player_name_full === e.target.value) return player
         else return null;
       }, [])
       id = target[0].id;
@@ -151,41 +151,43 @@ class Splash extends React.Component {
             <option>TE</option>
           </select>
         </div>
-        <Table id="leaderBoard">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Team</th>
-              <th>Position</th>
-              <th>Touchdowns</th>
-              <th>Total Points</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-            <tbody>
-              {this.state.leaders && this.state.leaders.map(function(player, index) {
-                if (self.props.loggedIn) {
-                  return (<tr key={index}>
-                    <td>{player.player_name_full}</td>
-                    <td>{player.team_code}</td>
-                    <td>{player.position}</td>
-                    <td>{player.touchdowns}</td>
-                    <td>{player.total_points}</td>
-                    <td><button onClick={self.handleClickName}>Add To Favorites</button></td>
-                  </tr>)
-                } else {
-                  return (<tr key={index}>
-                    <td>{player.player_name_full}</td>
-                    <td>{player.team_code}</td>
-                    <td>{player.position}</td>
-                    <td>{player.touchdowns}</td>
-                    <td>{player.total_points}</td>
-                    <td>Log in first</td>
-                  </tr>)
-                }
-              })}
-            </tbody>
-        </Table>
+        <div className="tableContainer">
+          <Table id="leaderBoard">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Position</th>
+                <th>Touchdowns</th>
+                <th>Total Points</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+              <tbody>
+                {this.state.leaders && this.state.leaders.map(function(player, index) {
+                  if (self.props.loggedIn) {
+                    return (<tr key={index}>
+                      <td>{player.player_name_full}</td>
+                      <td>{player.team_code}</td>
+                      <td>{player.position}</td>
+                      <td>{player.touchdowns}</td>
+                      <td>{player.total_points}</td>
+                      <td><button onClick={self.handleClickName} value={player.player_name_full}>Add To Favorites</button></td>
+                    </tr>)
+                  } else {
+                    return (<tr key={index}>
+                      <td>{player.player_name_full}</td>
+                      <td>{player.team_code}</td>
+                      <td>{player.position}</td>
+                      <td>{player.touchdowns}</td>
+                      <td>{player.total_points}</td>
+                      <td>Log in first</td>
+                    </tr>)
+                  }
+                })}
+              </tbody>
+          </Table>
+        </div>
         <News/>
       </div>
     )

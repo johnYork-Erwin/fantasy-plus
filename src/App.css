@@ -10,15 +10,6 @@ form {
   margin-bottom: 10px;
 }
 
-#sideBar {
-  grid-column: 1;
-  padding-left: 20px;
-  padding-right: 20px;
-  background-color: blue;
-  color: white;
-}
-
-
 #PlayTypes {
   margin-top: 10px;
 }
@@ -30,15 +21,35 @@ form {
   margin-bottom: 20px;
 }
 
-#sideBar h3 {
+#sideBar {
+  grid-column: 1;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: blue;
+  color: white;
+  margin-left: 0px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#sideBarTitle {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-top: 0px;
+  background-color: darkblue;
   text-align: center;
-  text-decoration: underline;
 }
 
 #sideBar p {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 0px;
   text-align: center;
   text-decoration: none;
-  color: black;
+  color: white;
 }
 
 .newsHolder {
@@ -54,9 +65,19 @@ form {
   align-self: center;
 }
 
-.newsHolder h2, h5 {
-  margin-top: 3px;
-  margin-bottom: 3px;
+.newsHolder h2, h5, a {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.newsHolder a:hover {
+  cursor: pointer;
+  color: purple;
+}
+
+.newsHolder a {
+  padding-top: 10px;
+  font-size: 20px;
 }
 
 .container {
@@ -157,21 +178,17 @@ Table {
   border-collapse: collapse;
   display: block;
   background-color: white;
-  border-color: black;
   margin-bottom: 10px;
   margin-top: 10px;
 }
 
 Table thead tr {
   background-color: lightblue;
-  border-color: black;
-  border-width: 5px;
 }
 
 Table tr {
   margin-top: 3px;
   margin-bottom: 3px;
-  border-radius: 5px;
   width: 100%;
 }
 
@@ -193,15 +210,62 @@ Table tr:nth-child(2n) {
   background-color: silver;
 }
 
+Table tr:first-child {
+  border-top-color: black;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+Table tr:last-child {
+  border-bottom-color: black;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+Table td:first-child {
+  border-left-color: black;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+
+Table td:last-child {
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+
+Table th:first-child {
+  border-left-color: black;
+  border-left-width: 1px;
+  border-left-style: solid;
+}
+
+Table th:last-child {
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+
 .tableContainer {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
 
+.inline {
+  display: inline-block;
+}
+
 /*Table for splash*/
 #leaderBoard th, td {
   width: 200px;
+}
+
+#leaderBoard button {
+  border-radius: 5px;
+  background-color: white;
+  border-color: black;
+  border-width: 1px;
 }
 
 /*Table for player*/
@@ -251,44 +315,36 @@ Table tr:nth-child(2n) {
 
 /*Banner Stylings*/
 .banner {
-  display: grid;
-  grid-template-columns: repeat(15, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  margin-top: -21px;
+
   background-color: lightblue;
   border-color: blue;
   border-width: 5px;
-  height: 140px;
+  height: 80px;
+  width: 100%;
 }
 
-.banner button {
-  grid-row: 3;
-  grid-column: 12/14;
+.flexbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flexbox h1 {
+  margin-left: 30px;
+}
+
+.flexbox button {
   height: 30px;
   border-radius: 5px;
+  margin-right: 30px;
 }
 
+/*MODAL*/
 #login {
   display: grid;
   grid-template-columns: repeat(1fr, 5);
   grid-template-rows: repeat(1fr, 4);
 }
-
-#logIn {
-  grid-row: 2;
-  grid-column: 12/14;
-  height: 30px;
-  border-radius: 5px;
-}
-
-.banner h1 {
-  grid-row: 2;
-  grid-column: 2/12;
-  height: 15px;
-  vertical-align: middle;
-}
-
-
 
 /*Beign supplied by the REact build*/
 

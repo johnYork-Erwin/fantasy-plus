@@ -270,10 +270,8 @@ class Team extends React.Component {
                 </tbody>
               </Table>
               <div className="center">
-                <label>
-                  Position:
-                </label>
-                <select name="position" value={this.state.position} onChange={this.handleChange}>
+                <h3 className="inline">Players By Position: </h3>
+                <select className="inline" name="position" value={this.state.position} onChange={this.handleChange}>
                   <option>QB</option>
                   <option>RB</option>
                   <option>WR</option>
@@ -301,7 +299,6 @@ class Team extends React.Component {
               <h3> Play Choices over the Season </h3>
               <PlayTypes playTypesValue='Season' playersTeam={this.state.teamData}/>
             </div>
-            <Link to="/" className="center"><button className="back">Back to Home</button></Link>
           </div>
         }
       </div>

@@ -7,7 +7,7 @@ const knex = require('../../knex');
 router.get('/players/:playerName', (req, res, next) => {
   let name = req.params.playerName
   let string = '%' + name + '%';
-  knex('players').where('player_name_full', 'ilike', string)
+  knex('players').whereIn('position', ['QB', 'RB', 'TE', 'WR']).andWhere('player_name_full', 'ilike', string)
     .then(results => {
       if (results.length === 0) {
         res.status(400).send('No player names contain those letters...')
