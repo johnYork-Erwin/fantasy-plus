@@ -55,8 +55,8 @@ class News extends React.Component {
             <h5>Author: {this.state.news[this.state.newsPointer].author || 'Various'}</h5>
             <img alt='' onClick={() => window.open(self.state.news[self.state.newsPointer].url)} className="newsImage" src={this.state.news[this.state.newsPointer].urlToImage}></img>
             <div id="navButtons">
-              <button onClick={this.left}>{left}</button>
-              <button onClick={this.right}>{right}</button>
+              <button className="mainButton" onClick={this.left}>{left}</button>
+              <button className="mainButton" onClick={this.right}>{right}</button>
             </div>
             <div className="center" id="pagination">{this.state.newsPointer+1} / {this.state.news.length}</div>
           </div>

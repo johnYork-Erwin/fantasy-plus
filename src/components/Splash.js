@@ -98,6 +98,7 @@ class Splash extends React.Component {
   render() {
     const self = this;
     return (
+
       <div>
         {this.props.loggedIn &&
           <form onSubmit={this.handleSubmitSearch}>
@@ -113,7 +114,7 @@ class Splash extends React.Component {
         }
         {this.state.playerFound && this.props.loggedIn &&
         <div className="tableContainer">
-          <Table>
+          <Table id="searched">
             <thead>
               <tr>
                 <th data-field='player_name_full'>Name</th>

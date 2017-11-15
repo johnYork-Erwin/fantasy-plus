@@ -2,6 +2,18 @@ html {
   height: 100%;
 }
 
+.mainButton {
+  background-color: #7a9460;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+.mainButton Link {
+  text-decoration: none;
+}
+
 #root {
   height: 100%;
 }
@@ -23,10 +35,11 @@ form {
 }
 
 .deletePlayer {
-  margin-left: 50px;
-  margin-right: 50px;
-  margin-top: 5px;
-  margin-bottom: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border-width: 1px;
+  background-color: orangered;
 }
 
 #sideBar {
@@ -64,7 +77,7 @@ form {
 .newsHolder {
   display: inline-block;
   width: 60%;
-  background-color: lightgrey;
+  background-color: white;
   border-radius: 5px;
   padding-bottom: 10px;
   padding-top: 3px;
@@ -138,6 +151,16 @@ form {
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 5px;
+  background-color: white;
+  border-style: solid;
+  border-color: black;
+  border-width: 0.5px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+#logInForm input {
+  margin-left: 5px;
 }
 
 /*NEWS!*/
@@ -272,6 +295,13 @@ Table th:last-child {
   display: inline-block;
 }
 
+#searched button {
+  border-radius: 5px;
+  background-color: white;
+  border-color: black;
+  border-width: 1px;
+}
+
 /*Table for splash*/
 #leaderBoard th, td {
   width: 200px;
@@ -336,7 +366,6 @@ Table th:last-child {
 
 /*Banner Stylings*/
 .banner {
-
   background-color: lightblue;
   border-color: blue;
   border-width: 5px;
@@ -346,18 +375,36 @@ Table th:last-child {
 
 .flexbox {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+}
+
+.flexbox img {
+  margin-left: 30px;
+  align-self: flex-start;
+  flex-grow: 1;
 }
 
 .flexbox h1 {
   margin-left: 30px;
+  align-self: flex-start;
+  flex-grow: 60;
+}
+
+.flexbox h3 {
+  margin-left: 30px;
+  align-self: flex-start;
+  flex-grow: 90;
+  height: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .flexbox button {
+  float: right;
   height: 30px;
   border-radius: 5px;
   margin-right: 30px;
+  flex-grow: 1;
 }
 
 /*MODAL*/

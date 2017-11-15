@@ -104,10 +104,10 @@ class Player extends React.Component {
       case 'Fumbles':
         data = playerGame.fumbles;
         break;
-      case 'Rush attempts':
+      case 'Rush Attempts':
         data = playerGame.rushAttempts;
         break;
-      case 'Rush yards':
+      case 'Rush Yards':
         data = playerGame.rushYards;
         break;
       case 'Rush TD':

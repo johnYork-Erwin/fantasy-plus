@@ -79,11 +79,13 @@ class Banner extends React.Component {
     return (
       <header className='banner'>
         <div className="flexbox">
-          <h1><Link to={'/'}>Fantasy Plus</Link></h1>
-          {this.props.loggedIn &&
-            <h1>Welcome {this.props.userInfo.username}</h1>
+          <Link to={"/"}><img src="/logo.png" alt="" style={{height: '60px', width: '60px', marginLeft: '20px'}}></img></Link>
+          <h1><Link to={'/'} style={{textDecoration: 'none', color: 'black'}}>Fantasy Plus</Link></h1>
+          {this.props.loggedIn ?
+            <h3>Welcome {this.props.userInfo.username}</h3> :
+            <h3> </h3>
             }
-          <button id='logIn' onClick={()=> {
+          <button id='logIn' className="mainButton" onClick={()=> {
             if (this.props.loggedIn) this.props.logOut();
             else this.openModal();
           }}>{this.props.loggedIn ? 'Log Out': 'Log In'}</button>
@@ -103,7 +105,7 @@ class Banner extends React.Component {
           onRequestClose={this.closeModal}
           style={customStyles}
           contentLabel="Modal">
-          <h2 className="title" ref={subtitle => this.subtitle = subtitle}>Log In</h2>
+          <h2 className="title" ref={subtitle => this.subtitle = subtitle}>Log In or Sign Up</h2>
           <form id="logInForm" name="form" onSubmit={() => this.validate('logIn')}>
             <div className="userName">
               <label>
