@@ -29,9 +29,9 @@ class App extends Component {
       .then(response => {
         return this.logIn(information)
       }).then(response => {
-        toast.success('signed up successfully');
+        toast.success(`${information.username}, you are now signed up!`);
       })
-      .catch(err => toast.error('username already in use'))
+      .catch(err => toast.error(`Couldn't sign you up, ${information.username} is already taken.`))
   }
 
   logIn(information) {
@@ -44,7 +44,7 @@ class App extends Component {
           loggedIn: true,
           userInfo: object,
         })
-        toast.success('logged you in')
+        toast.success(`You're now logged in, ${response.data.username}!`)
       }).catch(err => {
         toast.error(err.response.data)
       })
@@ -52,11 +52,11 @@ class App extends Component {
 
   logOut() {
     axios.delete('/token').then(result => {
+      toast.success(`Logged you out ${this.state.userInfo.username}!`)
       this.setState({
         loggedIn: false,
         userInfo: {},
       })
-      toast.success('logged out')
       window.location.href = '/'
     }).catch(err => toast.error(err.response.data));
   }
