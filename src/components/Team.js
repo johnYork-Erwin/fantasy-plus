@@ -107,7 +107,8 @@ class Team extends React.Component {
         data = info.passYards;
         break;
       case 'Completion %':
-        data = (info.passCompletions/info.passAttempts).toFixed(1)
+        if (info.passAttempts === 0) data = 0;
+        else data = Math.round(100*info.passCompletions/info.passAttempts).toFixed(1)
         break;
       case 'Touchdowns':
         data = info.totalTd;

@@ -69,12 +69,13 @@ router.get('/external', (req, res, next) => {
     for (let i = upToDateThrough+1; i < result; i++) {
       array.push(i);
     }
+    upToDateThrough = result;
     return finishWeeks(array)
   }).then(result => {
-    let obj = {upToDateThrough: upToDateThrough}
     console.log('finished updating all the weeks!');
-    return knex('current').first().update(obj)
+    return knex('current').where('id', '=', '1').update('upToDateThrough', upToDateThrough)
   }).then(result => {
+    console.log(result)
     res.send('successfully updated our DB!')
   }).catch(err => next(err))
 })

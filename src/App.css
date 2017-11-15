@@ -41,6 +41,7 @@ form {
   border-radius: 5px;
   border-width: 1px;
   background-color: orangered;
+  border-color: black;
 }
 
 #sideBar {

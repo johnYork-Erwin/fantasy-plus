@@ -118,9 +118,11 @@ class Player extends React.Component {
         break;
       case 'Completion %':
         if (playerGame.passYards === 0) {
-          data = (playerGame.rec/(playerGame.recTargets)).toFixed(2);
+          if (playerGame.recTargets === 0) data = 0;
+          else data = Math.round(100*playerGame.rec/(playerGame.recTargets)).toFixed(2);
         } else {
-          data = (playerGame.passCompletions/(playerGame.passAttempts)).toFixed(2);
+          if (playerGame.passAttempts === 0) data = 0;
+          else data = Math.round(100*playerGame.passCompletions/(playerGame.passAttempts));
         }
         break;
       case 'Passes':
