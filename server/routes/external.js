@@ -24,16 +24,27 @@ const playerPlate = {
   },
 }
 
-router.get('/externalies', (req, res, next) => {
-  let gameId = 2017102908;
-  axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
-    let retVal = scrubHelper(result.data);
-    res.send(result.data)
+router.patch('/external/setCurrent', (req, res, next) => {
+  let reset = 11;
+  let message = 'reset to ' + reset
+  knex('current').where('id', '=', '1').update({upToDateThrough: reset}).then(result => {
+    console.log(message)
+    res.send('success')
   })
-  .catch(err => {
-    next(err)
-  })
+  .catch(err => console.log(err))
 })
+
+// Exists for development purposes, looking at specific games
+// router.get('/externalies', (req, res, next) => {
+//   let gameId = 2017102908;
+//   axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
+//     let retVal = scrubHelper(result.data);
+//     res.send(result.data)
+//   })
+//   .catch(err => {
+//     next(err)
+//   })
+// })
 
 //Gets what week we're up to in our database
 function getCurrent() {
@@ -66,8 +77,8 @@ router.get('/external', (req, res, next) => {
   }).then(result => {
     console.log('reality is through week ' + result);
     let array = [];
-    for (let i = upToDateThrough+1; i < result; i++) {
-      array.push(i);
+    for (let i = upToDateThrough; i < result; i++) {
+      array.push(i+1);
     }
     upToDateThrough = result;
     return finishWeeks(array)
@@ -75,7 +86,6 @@ router.get('/external', (req, res, next) => {
     console.log('finished updating all the weeks!');
     return knex('current').where('id', '=', '1').update('upToDateThrough', upToDateThrough)
   }).then(result => {
-    console.log(result)
     res.send('successfully updated our DB!')
   }).catch(err => next(err))
 })
@@ -83,10 +93,8 @@ router.get('/external', (req, res, next) => {
 async function finishWeeks(weeksArray) {
   let finishedWeeks = [];
   while (weeksArray.length !== 0) {
-    console.log(`starting week ${weeksArray[0]}`)
     let week = weeksArray.splice(0,1);
     let temp = await update(week)
-    console.log();
     finishedWeeks = finishedWeeks.concat([temp])
   }
   return finishedWeeks
@@ -133,7 +141,6 @@ function update(weekToUpdate) {
         array.push(Promise.all(newArray));
       }
       return Promise.all(array);
-      console.log('finished teams for week' + weekToUpdate);
       //switching to work on players
     }).then(results => {
       let playersArray = [];
@@ -170,12 +177,14 @@ function getSchedule(weekNumber) {
 
 //gets the game ids for that week's schedule
 function getGame(gameId) {
-  if (gameId !== 2017091006) {
+  if (gameId !== 2017091006 && gameId !== 2017112700) {
     return new Promise(function (resolve, reject) {
       axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
+        console.log('got success for ' + gameId)
         resolve(result.data);
       })
       .catch(err => {
+        console.log('got an error for ' + gameId)
         reject(undefined)
       })
     })

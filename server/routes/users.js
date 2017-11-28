@@ -18,6 +18,17 @@ const authorize = function(req, res, next) {
   });
 };
 
+router.get('/users/username', authorize, (req, res, next) => {
+  knex('users').where('users.id', '=', req.claim.userId).select('username').then(result => {
+    if (result.length === 1) {
+      res.send(result)
+    }
+  })
+  .catch(err => {
+    console.log(err)
+  })
+})
+
 router.post('/users', (req, res, next) => {
   knex('users').where('username', '=', req.body.username).first()
     .then((row) => {

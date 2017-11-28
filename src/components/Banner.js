@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import 'react-toastify/dist/ReactToastify.min.css'
 import {ToastContainer, toast} from 'react-toastify'
 import {Link} from 'react-router-dom'
+// import axios from 'axios'
 
 const customStyles = {
   content : {
@@ -89,6 +90,10 @@ class Banner extends React.Component {
             if (this.props.loggedIn) this.props.logOut();
             else this.openModal();
           }}>{this.props.loggedIn ? 'Log Out': 'Log In'}</button>
+          {/* used for testing! */}
+          {/* <button onClick={() => {
+            axios.patch('/external/setCurrent').then(result => console.log(result))
+          }}>Reset Current</button> */}
         </div>
         <ToastContainer
           position="top-center"

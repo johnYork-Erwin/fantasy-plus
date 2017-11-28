@@ -63,6 +63,22 @@ class App extends Component {
 
   componentDidMount() {
     this.update();
+    let loggedIn = false;
+    let userInfo = {}
+    axios.get('/token').then(result => {
+      if (result) {
+        loggedIn = true;
+      }
+      return axios.get('/users/username')
+    })
+    .then(result => {
+      userInfo = result.data[0];
+      this.setState({
+        loggedIn: loggedIn,
+        userInfo: userInfo
+      })
+      this.getPlayers()
+    })
   }
 
   update() {
