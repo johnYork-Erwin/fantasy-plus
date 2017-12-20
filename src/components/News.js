@@ -61,7 +61,7 @@ class News extends React.Component {
             <div className="center" id="pagination">{this.state.newsPointer+1} / {this.state.news.length}</div>
           </div>
         }
-        <h6>News provided by newsapi.org</h6>
+        <h6>News feed provided by newsapi.org</h6>
       </div>
     )
   }
