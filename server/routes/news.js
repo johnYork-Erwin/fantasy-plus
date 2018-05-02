@@ -10,7 +10,7 @@ router.get('/news', (req, res, next) => {
   axios.get(`https://newsapi.org/v1/articles?source=nfl-news&sortBy=latest&apiKey=${newsKey}`).then(result => {
     res.send(result.data.articles)
   })
-  .catch(err => console.log(err))
+  .catch(err => console.log('there was an error when we tried to load news!'))
 })
 
 module.exports = router;
