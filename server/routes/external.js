@@ -24,6 +24,7 @@ const playerPlate = {
   },
 }
 
+//gets info about how up to date the database is so that we can update only what's missing
 router.patch('/external/setCurrent', (req, res, next) => {
   let reset = 11;
   let message = 'reset to ' + reset
@@ -59,7 +60,7 @@ function getCurrent() {
   })
 }
 
-//Gets what week we're up to in RL
+//Gets what week we're up to in real life
 function getReal() {
   return new Promise(function (resolve, reject) {
     axios.get('http://api.suredbits.com/nfl/v0/info').then(result => {
@@ -141,7 +142,7 @@ function update(weekToUpdate) {
         array.push(Promise.all(newArray));
       }
       return Promise.all(array);
-      //switching to work on players
+      //gathering info on players and merging it into something postable
     }).then(results => {
       let playersArray = [];
       for (let i = 0; i < players.length; i++) {
@@ -160,7 +161,7 @@ function update(weekToUpdate) {
   })
 }
 
-//Gets the schedule for that week
+//Gets the schedule for a sepecific week
 function getSchedule(weekNumber) {
   return new Promise(function (resolve, reject) {
     axios.post(`https://profootballapi.com/schedule?api_key=${key}&year=2017&week=${weekNumber}&season_type=REG`).then(result =>{
