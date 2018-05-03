@@ -24,12 +24,11 @@ const playerPlate = {
   },
 }
 
-//gets info about how up to date the database is so that we can update only what's missing
+//updates the databases that tracks how up to date our information is
 router.patch('/external/setCurrent', (req, res, next) => {
   let reset = 11;
   let message = 'reset to ' + reset
   knex('current').where('id', '=', '1').update({upToDateThrough: reset}).then(result => {
-    console.log(message)
     res.send('success')
   })
   .catch(err => console.log(err))
@@ -73,10 +72,10 @@ router.get('/external', (req, res, next) => {
   let upToDateThrough;
   getCurrent().then(result => {
     upToDateThrough = result;
-    console.log('db is current through week ' + result)
+    // console.log('db is current through week ' + result)
     return getReal();
   }).then(result => {
-    console.log('reality is through week ' + result);
+    // console.log('reality is through week ' + result);
     let array = [];
     for (let i = upToDateThrough; i < result; i++) {
       array.push(i+1);
@@ -84,7 +83,7 @@ router.get('/external', (req, res, next) => {
     upToDateThrough = result;
     return finishWeeks(array)
   }).then(result => {
-    console.log('finished updating all the weeks!');
+    // console.log('finished updating all the weeks!');
     return knex('current').where('id', '=', '1').update('upToDateThrough', upToDateThrough)
   }).then(result => {
     res.send('successfully updated our DB!')
@@ -155,7 +154,7 @@ function update(weekToUpdate) {
     }).then(playersArray => {
       return finishPlayers(playersArray)
     }).then(result => {
-      console.log('successfully updated one week! ---- ' + weekToUpdate);
+      // console.log('successfully updated one week! ---- ' + weekToUpdate);
       resolve('success')
     }).catch(err => reject(err))
   })
@@ -181,11 +180,11 @@ function getGame(gameId) {
   if (gameId !== 2017091006 && gameId !== 2017112700) {
     return new Promise(function (resolve, reject) {
       axios.post(`https://profootballapi.com/game?api_key=${key}&game_id=${gameId}`).then(result => {
-        console.log('got success for ' + gameId)
+        // console.log('got success for ' + gameId)
         resolve(result.data);
       })
       .catch(err => {
-        console.log('got an error for ' + gameId)
+        // console.log('got an error for ' + gameId)
         reject(undefined)
       })
     })
