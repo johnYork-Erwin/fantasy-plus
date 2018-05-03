@@ -7,6 +7,8 @@ const boom = require('boom');
 const knex = require('../../knex');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie-parser');
+//PROCESS.ENV IS THE PROBLEM! It lost the key to newsAPI and I think it's also what's messing up the authorize function.
+//LOOK INTO MORE ABOUT THIS
 
 const authorize = function(req, res, next) {
   jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
