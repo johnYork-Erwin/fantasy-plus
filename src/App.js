@@ -81,11 +81,12 @@ class App extends Component {
     })
   }
 
-  update() {
-    axios.get('/external').then(result => {
-    }).catch(err => {
-    })
-  }
+  // update() {
+  //   axios.get('/external').then(result => {
+  //   }).catch(err => {
+  //     console.log(err)
+  //   })
+  // }
 
   getPlayers() {
     if (this.state.loggedIn) {

@@ -88,6 +88,7 @@ class Splash extends React.Component {
         playerSearch: '',
       })
     }).catch(err => {
+      console.log(err)
     })
   }
 
