@@ -80,7 +80,7 @@ class Banner extends React.Component {
     return (
       <header className='banner'>
         <div className="flexbox">
-          <Link to={"/"}><img src="/logo.png" alt="" style={{height: '600px', width: '600px', marginLeft: '20px'}}></img></Link>
+          <Link to={"/"}><img src="../../../public/logo.png" alt="" style={{height: '60px', width: '60px', marginLeft: '20px'}}></img></Link>
           <h1><Link to={'/'} style={{textDecoration: 'none', color: 'black'}}>Fantasy Plus</Link></h1>
           {this.props.loggedIn ?
             <h3>Welcome {this.props.userInfo.username}</h3> :
