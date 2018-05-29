@@ -19,9 +19,9 @@ class App extends Component {
       userPlayers: [],
     }
     this.logIn = this.logIn.bind(this);
-    this.update = this.update.bind(this);
     this.logOut = this.logOut.bind(this);
     this.getPlayers = this.getPlayers.bind(this);
+    this.update = this.update.bind(this);
   }
 
   signUp(information) {
@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.update();
+    // this.update();
     let loggedIn = false;
     let userInfo = {}
     axios.get('/token').then(result => {
@@ -81,12 +81,12 @@ class App extends Component {
     })
   }
 
-  // update() {
-  //   axios.get('/external').then(result => {
-  //   }).catch(err => {
-  //     console.log(err)
-  //   })
-  // }
+  update() {
+    axios.get('/external').then(result => {
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   getPlayers() {
     if (this.state.loggedIn) {
