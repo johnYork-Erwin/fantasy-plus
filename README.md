@@ -21,4 +21,8 @@ There is a news feed on the splash page that is updated on login with the 10 mos
 The logo in the top left corner throughout the site is a link to the home page.
 
 ## TheFuture....
+<<<<<<< HEAD
 I had to pay profootballapi for the privilege of using their data, thus, this site has ceased pulling new data as of December 1st. However, data will still be shown from 2017s football season. I would love to eventually get photos for the players and tie them to the database. This process would include storing the photos with cloudinary or aws and storing a link to those photos in my PostgreSQL database. Another topic of interest for me looking forward is establishing trends of a player"s performance based on which quarterback he"s playing with. The quarterback being second string can cause odd effects such as a running back being used far more heavily but to much less avail. These statistics would be very interesting to me to track.
+=======
+I had to pay profootballapi for the privilege of using their data, thus, this site has ceased pulling new data as of December 1st. However, data will still be shown from 2017s football season. I would love to eventually get photos for the players and tie them to the database. This process would include storing the photos with cloudinary or aws and storing a link to those photos in my PostgreSQL database. Another topic of interest for me looking forward is establishing trends of a player's performance based on which quarterback he's playing with. The quarterback being second string can cause odd effects such as a running back being used far more heavily but to much less avail. These statistics would be very interesting to me to track.
+>>>>>>> 7f5be9fa48af482dc640e59e9b1ea652650847a3
