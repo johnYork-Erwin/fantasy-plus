@@ -12,8 +12,6 @@ const cookie = require('cookie-parser');
 //LOOK INTO MORE ABOUT THIS
 
 const authorize = function(req, res, next) {
-  console.log(process.env.JWT_KEY)
-
   jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
     if (err) {
       return next(boom.create(401, 'Log in in order to store your results'));
